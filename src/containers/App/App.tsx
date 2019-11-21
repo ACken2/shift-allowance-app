@@ -1,30 +1,25 @@
 // Import library
 import React from 'react';
-import Button from '@material-ui/core/Button';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+} from "react-router-dom";
 
-// Import CSS module stylesheet
-import styles from './App.module.css';
+// Import our page to render
+import { Home } from 'containers/Home';
 
-// Import logo of our home page
-import logo from './calendar_logo.svg';
-
-// Render our home page
+// Render our App
 const App: React.FC = () => {
-	return (
-		<div className={styles.app}>
-			<header className={styles.appHeader}>
-				<img src={logo} className={styles.appLogo} alt="logo" />
-				<div className={styles.appBody}>
-					<p className={styles.appBodyTitle}>
-						Shift Duty Allowance Calculator
-					</p>
-					<Button variant="contained" color="primary" className={styles.appBodyButton}>
-						Start Calculation
-					</Button>
-				</div>
-			</header>
-		</div>
-	);
+    return(
+        <Router>
+            <Switch>
+                <Route path="/">
+                    <Home />
+                </Route>
+            </Switch>
+        </Router>
+    )
 }
 
 export default App;
