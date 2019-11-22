@@ -18,11 +18,16 @@ const Home: React.FC = () => {
 					<p className={styles.homeBodyTitle}>
 						Shift Duty Allowance Calculator
 					</p>
-					<Button variant="contained" color="primary" className={styles.homeBodyButton}>
+					<Button variant="contained" color="primary" className={styles.homeBodyButton} href="/step-1">
 						Get Started
 					</Button>
 				</div>
 			</header>
+			<footer className={styles.homeFooter}>
+                <div className="center-div">
+					Icons made by <a href="https://www.flaticon.com/authors/itim2101" title="itim2101">itim2101</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+                </div>
+            </footer>
 		</div>
 	);
 }

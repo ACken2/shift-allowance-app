@@ -8,7 +8,7 @@
 
 .homeHeader {
 	background-color: #282c34;
-	min-height: 100vh;
+	min-height: 95vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -30,4 +30,12 @@
 	width: 100%;
 	height: 10vmin;
 	font-size: 3.5vmin !important;
+}
+
+.homeFooter {
+	height: 5vh;
+	font-size: 2vmin;
+	background-color: #282c34;
+	color: white;
+	margin: 0;
 }

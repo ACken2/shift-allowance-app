@@ -11,3 +11,13 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
 		monospace;
 }
+
+a {
+	color: white;
+}
+
+.center-div {
+	position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
