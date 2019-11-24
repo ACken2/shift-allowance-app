@@ -25,6 +25,21 @@ const DateSelect: React.FC = () => {
     const defaultMaterialTheme = createMuiTheme({
         palette: {
             type: 'dark'
+        },
+        overrides: {
+            MuiPickersDay: {
+                day: {
+                    color: '#FFFFFF'
+                },
+                current: {
+                    color: '#FF9F71'
+                }
+            },
+            MuiButton: {
+                textPrimary: {
+                    color: '#FFFFFF'
+                }
+            }
         }
     });
     // Compute scale ratio for <KeyboardDatePicker> since it can only be scaled that way
