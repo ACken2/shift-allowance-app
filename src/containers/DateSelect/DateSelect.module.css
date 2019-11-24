@@ -1,0 +1,53 @@
+.dateSelect {
+	text-align: center;
+}
+
+.dateSelectLogo {
+	height: 30vmin;
+}
+
+.dateSelectHeader {
+	background-color: #282c34;
+	min-height: 95vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: white;
+}
+
+.dateSelectBody {
+	width: 60vw;
+}
+
+.dateSelectBodyText {
+	width: 100%;
+	font-size: 5vmin;
+	margin-block-start: 4vh;
+    margin-block-end: 4vh;
+}
+
+.dateSelectBodyButtonDiv {
+	height: 10vh;
+	margin-top: 4vh;
+	display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+}
+
+.dateSelectBodyButton {
+	width: 40%;
+    height: 75%;
+    font-size: 4vmin !important;
+    line-height: 4vmin !important;
+}
+
+.dateSelectFooter {
+	height: 5vh;
+	font-size: 2vmin;
+	background-color: #282c34;
+	color: white;
+	margin: 0;
+}
