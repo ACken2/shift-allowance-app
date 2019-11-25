@@ -1,0 +1,11 @@
+/* Custom CSS styling for react-big-calendar month view */
+
+/* Override the background color of the month view */
+.rbc-month-view {
+    background-color: #424242;
+}
+
+/* Override the background color of today in month view */
+.rbc-today {
+    background-color: #3f51b5;
+}

@@ -1,0 +1,43 @@
+/* Custom CSS styling for react-big-calendar toolbar */
+
+/* Override the background color, padding and margin of the toolbar */
+.rbc-toolbar {
+    background-color: #303030;
+    padding-bottom: 2vh;
+    padding-top: 2vh;
+    margin: 0px;
+}
+
+/* Override the default text color of button to be white */
+.rbc-toolbar button {
+    color: #FFFFFF;
+}
+
+/* Override the background and text color of button when hover or focus */
+/* This CSS speficially applies to the Month, Week, Day, Agenda button */
+.rbc-toolbar button:active, .rbc-toolbar button.rbc-active {
+    background-color: #3f51b5;
+    border-color: #8c8c8c;
+}
+
+/* Override the background and text color of button when hover or focus */
+/* This CSS speficially applies to the Today, Back and Next button */
+.rbc-toolbar button:active:hover, .rbc-toolbar button.rbc-active:hover, .rbc-toolbar button:active:focus {
+    color: #FFFFFF;
+    background-color: #3f51b5;
+    border-color: #8c8c8c; 
+}
+
+/* Override the background and text color of button when active (clicked) to be the same as when not active */
+/* This CSS speficially applies to the Today, Back and Next button */
+.rbc-toolbar button:focus, .rbc-toolbar button.rbc-active:focus {
+    color: #FFFFFF;
+    background-color: rgba(0, 0, 0, 0);
+    border-color: #8c8c8c; 
+}
+
+/* Override the font size of button and the text that said the current month */
+/* Using vmin to provide better screen size variation support */
+.rbc-btn-group button, .rbc-toolbar-label {
+    font-size: 4vmin;
+}
