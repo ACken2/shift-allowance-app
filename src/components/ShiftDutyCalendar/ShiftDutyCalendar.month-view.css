@@ -9,3 +9,8 @@
 .rbc-today {
     background-color: #3f51b5;
 }
+
+/* Override the font-size for event title */
+.rbc-event-content {
+    font-size: 3vmin;
+}
