@@ -3,10 +3,14 @@ import React from 'react';
 import {
     BrowserRouter as Router,
     Switch,
-    Route
+    Route,
+    Redirect
 } from "react-router-dom";
 import CalendarEvent from './CalendarEvent';
+
+// Import config files
 import dutyConfig from './DutyConfig.json';
+import dutyLoop from './DutyLoop.json';
 
 // Import our page to render
 import { Home } from 'containers/Home';
@@ -20,6 +24,7 @@ type AppProps = {
 type AppState = {
     // Array of added shift duty events
     events: Array<CalendarEvent>
+    redirectCalendarSelect: boolean;
 }
 
 // Setup our App
@@ -28,8 +33,26 @@ class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
-            events: []
+            events: [],
+            redirectCalendarSelect: false
         };
+    }
+
+    /**
+     * Handler for programatic redirect to CalendarSelect page at /step-2.
+     * 
+     * This function will render a <Redirect /> component to /step-2 if this.state.redirectCalendarSelect
+     * is true and reset this.state.redirectCalendarSelect to false.
+     * 
+     * @return {void}
+     */
+    renderRedirectCalendarSelect = () => {
+        if (this.state.redirectCalendarSelect) {
+            this.setState({
+                redirectCalendarSelect: false
+            });
+            return <Redirect to='/step-2' />
+        }
     }
     
     render() {
@@ -37,7 +60,10 @@ class App extends React.Component<AppProps, AppState> {
             <Router>
                 <Switch>
                     <Route path="/step-1">
-                        <DateSelect />
+                        <DateSelect 
+                            onDateConfirmed={(startDate: Date, dutyLoopId: number = 0) => this.handleDateConfirmation(startDate, dutyLoopId)}
+                        />
+                        {this.renderRedirectCalendarSelect()}
                     </Route>
                     <Route path="/step-2">
                         <CalendarSelect 
@@ -55,19 +81,20 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     /**
-     * Handler for duty modification event.
+     * Convert duty modification event into a commit in the form of a CalendarEvent object
+     * that is ready for merging into the main state via mergeEventChange().
      * 
-     * This method will automatically handle the duty modification event by
-     * merging the changes into the events array in state.
+     * This function is pure and does not alter the component state.
+     * Functions using this helper function must manually update state in their implementation.
      *
      * @param {Date} dateSelected The date selected by the user in the modification event.
      * @param {number} duty_id The duty ID selected by the user in the modification event.
      * @param {number} event_modified The event ID of the event being modified as in the events
      *      array in state, or -1 if the user intended to add a new duty.
      * 
-     * @return {void}
+     * @return {CalendarEvent} The commit ready for merging.
      */
-    handleEventModification(dateSelected: Date, duty_id: number, event_modified: number) {
+    getEventModificationCommit(dateSelected: Date, duty_id: number, event_modified: number) {
         // Look up the duty corresponding to the duty_id
         const duty = dutyConfig.find(x => x.id === duty_id);
         // Ensure duty !== undefined
@@ -105,12 +132,7 @@ class App extends React.Component<AppProps, AppState> {
                         id: duty_id
                     }
                 }
-                // Merge changes to the state events array
-                const merged_event: Array<CalendarEvent> = this.mergeEventChange(this.state.events, commit);
-                // Update state
-                this.setState({
-                    events: merged_event
-                });
+                return commit;
             }
             else {
                 // Duty selected is None, either a duty deletion event or a false add event
@@ -124,21 +146,20 @@ class App extends React.Component<AppProps, AppState> {
                         id: duty_id
                     }
                 }
-                // Merge changes to the state events array
-                const merged_event: Array<CalendarEvent> = this.mergeEventChange(this.state.events, commit);
-                // Update state
-                this.setState({
-                    events: merged_event
-                });
+                return commit;
             }
         }
         // No state update here, since duty_id not found is not supposed to occur
+        return null;
     }
 
     /**
-     * Merge a duty modification event with the events array in state.
+     * Merge a duty modification event with the events state array.
+     * 
+     * This function is pure and does not alter the component state.
+     * Functions using this helper function must manually update state in their implementation.
      *
-     * @param {Array<CalendarEvent>} original The original events array in state.
+     * @param {Array<CalendarEvent>} original The original state events array.
      * @param {CalendarEvent} commit The duty modification event expressed in the form of a CalendarEvent object where,
      *      commit.id should correspond to the event id being modified or -1 if a new event is to be added;
      *      commit.title should correspond to the event title of the event after modification or being added;
@@ -204,6 +225,144 @@ class App extends React.Component<AppProps, AppState> {
                 return cloned;
             }
         }
+    }
+
+    /**
+     * Handler for date confirmation on DateSelect page.
+     * 
+     * This method will automatically regenerate the events array based on the given parameters
+     * and replace the current events state array using initializeCalendar() and redirect to CalendarSelect page.
+     *
+     * @param {Date} startDate The first date for generation.
+     * @param {Array<number>} dutyLoopId The duty loop ID in DutyLoop.json that specified how
+     *      the duty starting from startDate should be generated. More specifically, the loopId key determined
+     *      the loop specification including its duration (i.e. number of days to loop) and ignoreWeekend
+     *      (i.e. whether the generation process should cross-over into weekend and next week automatically)
+     *      setting, and dutyIdLoopUnit key is an array of duty id (as specified in DutyConfig.json) that the
+     *      generation process should loop over (i.e. for a unit of [0, 1], day 0 should have duty id 0, day 1
+     *      should have duty id 1, day 2 should have duty id 0...etc.).
+     * 
+     * @return {void}
+     */
+    handleDateConfirmation(startDate: Date, dutyLoopId: number) {
+        // Obtain duty specification
+        const dutySpec = dutyLoop.duty.find(x => x.id === dutyLoopId);
+        // Make sure the duty specificaiton is found
+        if (!dutySpec) { 
+            // Invalid duty spec is used by the SKIP button in step 1
+            // In that case, we just have to redirect to the calendar with a empty event state
+            // With dutyIdArray computed, we can initialize the calendar
+            this.initializeCalendar(startDate, []);
+            // Use redirectCalendarSelect state to redirect to CalendarSelect page
+            this.setState({
+                redirectCalendarSelect: true
+            });
+            // No need to proceed forward
+            return;
+        }
+        // Get the loop specification associated with dutySpec
+        const loopSpec = dutyLoop.loop.find(x => x.id === dutySpec.loopId);
+        // Make sure the loop specification is found
+        if (!loopSpec) { return }
+        // Get the duty id loop unit
+        const dutyIdLoopUnit = dutySpec.dutyIdLoopUnit;
+        // Get the loop duration
+        const loopDuration = loopSpec.duration;
+        // Get whether the loop should ignore weekend (i.e. cross-over to weekend and next week automatically)
+        const loopIgnoreWeekend = loopSpec.ignoreWeekend;
+        // Compute dutyIdArray based on dutyIdLoopUnit, loopDuration and loopIgnoreWeekend
+        const dutyIdArray: Array<number> = [];
+        // Loop for loopDuration days
+        for (let i=0; i<loopDuration; i++) {
+            // If loopIgnoreWeekend is false, we have to check if current date is weekend or not
+            if (!loopIgnoreWeekend) {
+                // Compute current date
+                const currentDate = new Date(startDate.getTime());
+                currentDate.setDate(startDate.getDay() + i);
+                // Check if current date is weekend or not
+                if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+                    // If true, then break the loop and not continue forward
+                    break;
+                }
+            }
+            // Append the associated duty id into dutyIdArray
+            // The associated duty at day i should be i % dutyIdLoopUnit.length in dutyIdLoopUnit array
+            // Example: Given length 4 as loop unit, day 1/5 should have duty id at index 1%4=1 and 5%4=1 respectively
+            dutyIdArray.push(dutyIdLoopUnit[i % dutyIdLoopUnit.length]);
+        }
+        // With dutyIdArray computed, we can initialize the calendar
+        this.initializeCalendar(startDate, dutyIdArray);
+        // Use redirectCalendarSelect state to redirect to CalendarSelect page
+        this.setState({
+            redirectCalendarSelect: true
+        });
+    }
+
+    /**
+     * Initialize the events state array.
+     * 
+     * This method will automatically regenerate the events array based on the given parameters
+     * and replace the current events state array.
+     *
+     * @param {Date} startDate The first date for generation.
+     * @param {Array<number>} dutyIdArray The duty ID that should be assigned to each subsequent day
+     *      after startDate in the regenerated events array. This assumes that id at position i of the array 
+     *      corresponds to the duty that should be assigned to the date on (startDate + i Day).
+     *      For example, if startDate is 2019-09-01 and dutyIdArray is [0, 1], then this method would regenerate
+     *      an event array with 2019-09-01 having a duty with the duty id 0, and 2019-09-02 (+1 day) having a duty 
+     *      with the duty id 1.
+     * 
+     * @return {void}
+     */
+    initializeCalendar(startDate: Date, dutyIdArray: Array<number>) {
+        // Create a new empty events array
+        let events: Array<CalendarEvent> = [];
+        // Crearte a new event modification commit for each duty id in dutyIdArray starting from startDate
+        const commits = dutyIdArray.map((dutyId, i) => {
+            // Compute date for current index (startDate + i days)
+            const date = new Date(startDate.getTime());
+            date.setDate(startDate.getDate() + i);
+            // Return a commit associated with the duty id
+            return this.getEventModificationCommit(date, dutyId, -1);
+        });
+        // Merge the commit one-by-one unless it is null
+        commits.forEach((commit) => {
+            if (commit) {
+                events = this.mergeEventChange(events, commit);
+            }
+        });
+        // Push the initialized events state array into our App state
+        this.setState({
+            events: events
+        });
+    }
+
+    /**
+     * Handler for duty modification event.
+     * 
+     * This method will automatically handle the duty modification event by
+     * merging the changes into the events array in state.
+     *
+     * @param {Date} dateSelected The date selected by the user in the modification event.
+     * @param {number} duty_id The duty ID selected by the user in the modification event.
+     * @param {number} event_modified The event ID of the event being modified as in the events
+     *      array in state, or -1 if the user intended to add a new duty.
+     * 
+     * @return {void}
+     */
+    handleEventModification(dateSelected: Date, duty_id: number, event_modified: number) {
+        // Generate the event modification commit
+        const commit = this.getEventModificationCommit(dateSelected, duty_id, event_modified);
+        // Merge changes to the state events array if commit is not null
+        if (commit) {
+            // Merge changes to the state events array
+            const merged_event: Array<CalendarEvent> = this.mergeEventChange(this.state.events, commit);
+            // Push merged state into App state
+            this.setState({
+                events: merged_event
+            });
+        }
+        // No need to update state if commit is null somehow
     }
 
 }

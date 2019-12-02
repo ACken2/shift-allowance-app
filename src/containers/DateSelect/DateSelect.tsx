@@ -12,8 +12,13 @@ import logo from './calendar_logo.svg';
 // Import CSS module stylesheet
 import styles from './DateSelect.module.css';
 
+// Setup typings for props for our DateSelect page
+type DateSelectProps = {
+    onDateConfirmed: Function;
+}
+
 // Render our date select page
-const DateSelect: React.FC = () => {
+const DateSelect: React.FC<DateSelectProps> = ({ onDateConfirmed }: DateSelectProps) => {
     // <KeyboardDatePicker> requires date to be managed by class components that included it
     // Thus, we are using React state hooks to add a selectedDate state to this function component
     // selectedDate is the state for this component, while setSelectedDate() can be used to update the state
@@ -76,10 +81,10 @@ const DateSelect: React.FC = () => {
                                 />
                             </div>
                             <div className={styles.dateSelectBodyButtonDiv}>
-                                <Button variant="contained" color="primary" className={styles.dateSelectBodyButton}>
+                                <Button variant="contained" color="primary" className={styles.dateSelectBodyButton} onClick={() => onDateConfirmed(selectedDate, 0)}>
                                     Confirm
                                 </Button>
-                                <Button variant="contained" color="secondary" className={styles.dateSelectBodyButton}>
+                                <Button variant="contained" color="secondary" className={styles.dateSelectBodyButton} onClick={() => onDateConfirmed(selectedDate, -1)}>
                                     Skip
                                 </Button>
                             </div>
