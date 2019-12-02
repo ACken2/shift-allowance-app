@@ -1,0 +1,24 @@
+{
+    "loop": [
+        {
+            "id": 0,
+            "title": "For Continuous 28 Days",
+            "duration": 28,
+            "ignoreWeekend": true
+        },
+        {
+            "id": 1,
+            "title": "For Weekdays in 1 Week",
+            "duration": 5,
+            "ignoreWeekend": false
+        }
+    ],
+    "duty": [
+        {
+            "id": 0,
+            "title": "PANO Mode",
+            "loopId": 0,
+            "dutyIdLoopUnit": [1, 2, 3, 0]
+        }
+    ]
+}
