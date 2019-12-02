@@ -24,6 +24,7 @@ type AppProps = {
 type AppState = {
     // Array of added shift duty events
     events: Array<CalendarEvent>
+    // Boolean that control whether <Redirect /> to CalendarSelect container is rendered
     redirectCalendarSelect: boolean;
 }
 

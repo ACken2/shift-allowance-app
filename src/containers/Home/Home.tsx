@@ -1,6 +1,7 @@
 // Import library
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import { useHistory } from 'react-router-dom';
 
 // Import CSS module stylesheet
 import styles from './Home.module.css';
@@ -10,6 +11,7 @@ import logo from './calendar_logo.svg';
 
 // Render our home page
 const Home: React.FC = () => {
+	const history = useHistory();
 	return (
 		<div className={styles.home}>
 			<header className={styles.homeHeader}>
@@ -18,7 +20,7 @@ const Home: React.FC = () => {
 					<p className={styles.homeBodyTitle}>
 						Shift Duty Allowance Calculator
 					</p>
-					<Button variant="contained" color="primary" className={styles.homeBodyButton} href="/step-1">
+					<Button variant="contained" color="primary" className={styles.homeBodyButton} onClick={() => history.push("/step-1")}>
 						Get Started
 					</Button>
 				</div>
