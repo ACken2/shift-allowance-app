@@ -2,6 +2,7 @@
 import React from 'react';
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
+import Button from '@material-ui/core/Button';
 import { ShiftDutyCalendar } from 'components/ShiftDutyCalendar';
 import { ModifyDutyDialog } from 'components/ModifyDutyDialog';
 
@@ -23,6 +24,8 @@ type CalendarSelectProps = {
     dutyConfig: DutyConfig;
     // Function called when event modification occured
     onEventModification: Function;
+    // Function called when computation is initiated
+    onConfirm: Function;
 }
 type CalendarSelectState = {
     // State to control whether the modify dialog box is open or not
@@ -59,6 +62,9 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
             <ThemeProvider theme={defaultMaterialTheme}>
                 <div className={styles.calendarSelect}>
                     <header className={styles.calendarSelectHeader}>
+                        <p className={styles.calendarSelectTitle}>
+                            Fine-tune your duty here
+                        </p>
                         <ShiftDutyCalendar 
                             style={styles.calendarSelectCalendar}
                             events={this.props.events}
@@ -74,12 +80,22 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
                             onConfirmModification={(dateSelected: Date, duty_id: number) => this.handleDutyModificationConfirm(dateSelected, duty_id)}
                             onCancelModification={() => this.handleDutyModificationCancel()}
                         />
+                        <Button variant="contained" color="primary" className={styles.calendarSelectButton} onClick={() => this.props.onConfirm()}>
+                            How much allowance will I get?
+                        </Button>
                     </header>
                 </div>
             </ThemeProvider>
         );
     }
 
+    /**
+     * Event handler for selecting a slot in the ShiftDutyCalendar.
+     * 
+     * @param {SelectedSlotInfo} slot Description on the selected slot.
+     * 
+     * @return {void} 
+     */
     handleSelectSlot(slot: SelectedSlotInfo) {
         if (slot.action === "click" && slot.start.getTime() === slot.end.getTime()) {
             // Only handle click event if a single date is selected
@@ -97,6 +113,13 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
         }
     }
 
+    /**
+     * Event handler for selecting an existing event in the ShiftDutyCalendar.
+     * 
+     * @param {CalendarEvent} event Description on the selected event.
+     * 
+     * @return {void} 
+     */
     handleSelectEvent(event: CalendarEvent) {
         // Open modify event dialog once an event is clicked
         // Update state to open dialog with,
@@ -111,6 +134,14 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
         });
     }
 
+    /**
+     * Event handler for confirming a event modification in ModifyDutyDialog.
+     * 
+     * @param {Date} dateSelected Date selected in ModifyDutyDialog dialog box.
+     * @param {number} duty_id Duty ID selected in ModifyDutyDialog dialog box.
+     * 
+     * @return {void} 
+     */
     handleDutyModificationConfirm(dateSelected: Date, duty_id: number) {
         // Forward duty modification event to <App> parent component
         this.props.onEventModification(dateSelected, duty_id, this.state.modifyDialogEventId);
@@ -120,6 +151,11 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
         });
     }
 
+    /**
+     * Event handler for canceling a event modification in ModifyDutyDialog.
+     * 
+     * @return {void} 
+     */
     handleDutyModificationCancel() {
         // Simply close the dialog box if modification is cancel
         this.setState({

@@ -13,7 +13,21 @@
 	color: white;
 }
 
+.calendarSelectTitle {
+	width: 100%;
+	font-size: 5vmin;
+	margin-block-start: 0;
+	margin-block-end: 0.5em;
+}
+
 .calendarSelectCalendar {
-	height: 70vh;
+	height: 65vh;
+	margin-bottom: 9vh;
 	width: 90%;
+}
+
+.calendarSelectButton {
+	width: 90%;
+	margin-top: 1em !important;
+    font-size: 3vmin !important;
 }
