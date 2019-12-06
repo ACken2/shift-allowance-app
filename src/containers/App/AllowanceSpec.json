@@ -1,0 +1,36 @@
+[
+    {
+        "applicable": [1, 2, 3, 4, 5, 6],
+        "slots": [
+            {
+                "startHour": 0,
+                "startMinute": 0,
+                "startSecond": 0,
+                "endHour": 7,
+                "endMinute": 0,
+                "endSecond": 0
+            },
+            {
+                "startHour": 20,
+                "startMinute": 0,
+                "startSecond": 0,
+                "endHour": 24,
+                "endMinute": 0,
+                "endSecond": 0
+            }
+        ]
+    },
+    {
+        "applicable": [0],
+        "slots": [
+            {
+                "startHour": 0,
+                "startMinute": 0,
+                "startSecond": 0,
+                "endHour": 24,
+                "endMinute": 0,
+                "endSecond": 0
+            }
+        ]
+    }
+]
