@@ -6,18 +6,19 @@ import allowanceConfig from './AllowanceSpec.json';
 
 // Define the return format for this class
 // Return type for each allowance computation result
-type AllowanceDetail = {
-    start: Date;
-    end: Date;
-    hours: number;
+export type AllowanceDetail = {
+    start: Date; // Start time of the calculated period
+    end: Date; // End time of the calculated period
+    hours: number; // Number of hours qualified for shift duty allowance calculation
+    desc: string; // Shift duty title in ComputeResult.day, and empty string in ComputeResult.month
 }
 // Return type for overall allowance computation that included both by-month and by-day allowance break down
-type ComputeResult = {
+export type ComputeResult = {
     month: Array<AllowanceDetail>;
     day: Array<Array<AllowanceDetail>>;
 }
 
-class Allowance {
+export class Allowance {
 
     /**
      * Entry point for Allowance class to compute shift duty allowance from array of
@@ -230,8 +231,9 @@ class Allowance {
             return {
                 start: event.start,
                 end: event.end,
-                hours: allowanceHours
-            } as AllowanceDetail;
+                hours: allowanceHours,
+                desc: event.title
+            };
         });
     }
 
@@ -256,10 +258,9 @@ class Allowance {
         return {
             start: allowances[0].start,
             end: allowances[allowances.length - 1].end,
-            hours: totalAllowanceHour
-        } as AllowanceDetail;
+            hours: totalAllowanceHour,
+            desc: ''
+        };
     }
 
 }
-
-export default Allowance;
