@@ -1,0 +1,29 @@
+.allowanceResult {
+	text-align: center;
+}
+
+.allowanceResultHeader {
+	background-color: #282c34;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: start;
+	font-size: calc(10px + 2vmin);
+	color: white;
+	overflow-y: auto;
+}
+
+.allowanceResultTitle {
+	width: 100%;
+	font-size: 5vmin;
+	margin-block-end: 0;
+}
+
+.allowanceResultFooter {
+	height: 5vh;
+	font-size: 2vmin;
+	background-color: #282c34;
+	color: white;
+	margin: 0;
+}
