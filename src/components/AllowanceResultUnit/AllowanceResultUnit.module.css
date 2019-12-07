@@ -1,0 +1,67 @@
+.allowanceResultUnitParent {
+    width: 90%;
+    max-width: 900px;
+    background-color: #424242;
+    margin-top: 1em;
+}
+
+.allowanceResultUnit {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.allowanceResultUnitTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.allowanceResultUnitTitleText {
+    text-align: left;
+    font-size: 5vmin;
+    padding-left: 0.5em;
+    margin-block-start: 0;
+    margin-block-end: 0.25em;
+    flex-grow: 1;
+}
+
+.allowanceResultUnitBody {
+    display: flex;
+    align-items: center;
+    height: 10vmin;
+}
+
+.allowanceResultUnitBodyTitle {
+    text-align: left;
+    font-size: 3.8vmin;
+    padding-left: 0.5em;
+    white-space: nowrap;
+}
+
+.allowanceResultUnitBodyHours {
+    text-align: left;
+    font-size: 5.7vmin;
+    padding-left: 0.25em;
+}
+
+.allowanceResultUnitBar {
+    width: 95%;
+    transform: translateX(2.5%);
+    margin-top: 0.9em;
+}
+
+.allowanceResultUnitBarText {
+    text-align: right;
+    font-size: 3vmin;
+    color: lightgray;
+}
+
+.allowanceResultUnitExpandText {
+    font-size: calc(10px + 2vmin) !important;
+}
+
+.allowanceResultUnitExpandIcon {
+    color: white;
+}
