@@ -34,11 +34,8 @@ const AllowanceResult: React.FC<AllowanceResultProps> = ({ allowance, allowanceB
 						)
 					})
 				}
+				<div className={styles.allowanceResultEndSpacer}></div>
 			</header>
-			<footer className={styles.allowanceResultFooter}>
-                <div className="center-div">
-                </div>
-            </footer>
 		</div>
 	);
 }

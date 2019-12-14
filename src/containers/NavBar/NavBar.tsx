@@ -37,8 +37,8 @@ const NavBar: React.FC<NavBarProps> = ({ backRoute, nextRoute }: NavBarProps) =>
     }
 	return (
 		<div className={styles.navBar}>
-            {renderButton(backRoute, <ArrowBackIosIcon />)}
-            {renderButton(nextRoute, <ArrowForwardIosIcon />)}
+            {renderButton(backRoute, <ArrowBackIosIcon className={styles.navBarButtonIcon} />)}
+            {renderButton(nextRoute, <ArrowForwardIosIcon className={styles.navBarButtonIcon} />)}
 		</div>
 	);
 }

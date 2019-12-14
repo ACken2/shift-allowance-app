@@ -1,4 +1,6 @@
 .calendarSelect {
+	height: 95vh;
+	overflow-y: scroll;
 	text-align: center;
 }
 
@@ -21,13 +23,16 @@
 }
 
 .calendarSelectCalendar {
-	height: 65vh;
-	margin-bottom: 9vh;
 	width: 90%;
+	height: 65vh;
+	min-height: 400px;
+	margin-bottom: 4vh;
 }
 
 .calendarSelectButton {
 	width: 90%;
+	min-height: 30px;
 	margin-top: 1em !important;
-    font-size: 3vmin !important;
+	font-size: 3vmin !important;
+	margin-bottom: 45px !important;
 }

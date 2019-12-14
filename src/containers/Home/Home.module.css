@@ -1,4 +1,6 @@
 .home {
+	height: 95vh;
+	overflow-y: scroll;
 	text-align: center;
 }
 
@@ -34,8 +36,11 @@
 
 .homeFooter {
 	height: 5vh;
-	font-size: 2vmin;
+	min-height: 32px;
+	font-size: calc(5px + 1vmin);
 	background-color: #282c34;
 	color: white;
 	margin: 0;
+	display: flex;
+    justify-content: center;
 }

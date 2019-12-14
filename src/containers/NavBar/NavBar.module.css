@@ -1,5 +1,6 @@
 .navBar {
     height: 5vh;
+    min-height: 32px;
     width: 100%;
     background-color: #282c34;
     display: flex;
@@ -10,4 +11,13 @@
 
 .navBarButton {
     color: white !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 3vmin !important;
+    padding-right: 3vmin !important;
+    margin-top: 1vh !important;
+}
+
+.navBarButtonIcon {
+    font-size: calc(18px + 1vh) !important;
 }
