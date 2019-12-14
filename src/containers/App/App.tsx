@@ -16,6 +16,7 @@ import dutyLoop from './DutyLoop.json';
 
 // Import our page to render
 import { Home } from 'containers/Home';
+import { NavBar } from 'containers/NavBar';
 import { DateSelect } from 'containers/DateSelect';
 import { CalendarSelect } from 'containers/CalendarSelect';
 import { AllowanceResult } from 'containers/AllowanceResult';
@@ -52,11 +53,13 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
         return(
             <Switch>
                 <Route path="/date-select">
+                    <NavBar backRoute={"/"} nextRoute={this.state.events.length > 0 ? "/calendar-select" : undefined } />
                     <DateSelect 
                         onDateConfirmed={(startDate: Date, dutyLoopId: number = 0) => this.handleDateConfirmation(startDate, dutyLoopId)}
                     />
                 </Route>
                 <Route path="/calendar-select">
+                    <NavBar backRoute={"/date-select"} nextRoute={this.state.lastAllowanceComputed.month.length > 0 ? "/allowance-result" : undefined } />
                     <CalendarSelect 
                         events={this.state.events}
                         dutyConfig={dutyConfig}
@@ -65,12 +68,14 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
                     />
                 </Route>
                 <Route path="/allowance-result">
+                    <NavBar backRoute={"/calendar-select"} nextRoute={undefined} />
                     <AllowanceResult 
                         allowance={this.state.lastAllowanceComputed.month}
                         allowanceBreakdown={this.state.lastAllowanceComputed.day}
                     />
                 </Route>
                 <Route path="/">
+                    <NavBar backRoute={undefined} nextRoute={undefined} />
                     <Home />
                 </Route>
             </Switch>
