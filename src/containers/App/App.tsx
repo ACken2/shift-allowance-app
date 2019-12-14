@@ -115,10 +115,14 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
                 startTime.setDate(startTime.getDate() + dutySpec.startDate);
                 startTime.setHours(dutySpec.startHour);
                 startTime.setMinutes(dutySpec.startMinute);
+                startTime.setSeconds(0);
+                startTime.setMilliseconds(0);
                 const endTime = new Date(dateSelected.getTime());
                 endTime.setDate(endTime.getDate() + dutySpec.endDate);
                 endTime.setHours(dutySpec.endHour);
                 endTime.setMinutes(dutySpec.endMinute);
+                endTime.setSeconds(0);
+                endTime.setMilliseconds(0);
                 // Create new CalendarEvent for the modification commit
                 const commit: CalendarEvent = {
                     id: event_modified,

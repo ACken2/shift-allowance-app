@@ -93,7 +93,7 @@ const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, al
 				</div>
 				<div className={styles.allowanceResultUnitBody}>
 					<div className={styles.allowanceResultUnitBodyTitle}>{'Hours qualified for shift duty allowance: '}</div>
-					<div className={styles.allowanceResultUnitBodyHours}>{allowance.hours}</div>
+					<div className={styles.allowanceResultUnitBodyHours}>{Math.floor(allowance.hours * 100) / 100}</div>
 				</div>
 				<div className={styles.allowanceResultUnitBar}>
 					<AllowanceProgress
@@ -120,8 +120,8 @@ const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, al
 								return (
 									<ListItem key={allowance.start.toString()}>
 										<ListItemTextStyled
-											primary={moment(allowance.start).format('MMM DD HH:MM') + ' - ' + moment(allowance.end).format('MMM DD HH:MM') + ' (' + allowance.desc + ')'}
-											secondary={allowance.hours + ' Hours'}
+											primary={moment(allowance.start).format('MMM DD HH:mm') + ' - ' + moment(allowance.end).format('MMM DD HH:mm') + ' (' + allowance.desc + ')'}
+											secondary={Math.floor(allowance.hours * 100) / 100 + ' Hours'}
 										/>
 									</ListItem>
 								)
