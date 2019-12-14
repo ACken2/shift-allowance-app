@@ -3,7 +3,6 @@ import React from 'react';
 import {
     Switch,
     Route,
-    Redirect,
     withRouter, RouteComponentProps
 } from "react-router-dom";
 import { Allowance, ComputeResult } from './Allowance';
@@ -48,34 +47,16 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
             redirectCalendarSelect: false
         };
     }
-
-    /**
-     * Handler for programatic redirect to CalendarSelect page at /step-2.
-     * 
-     * This function will render a <Redirect /> component to /step-2 if this.state.redirectCalendarSelect
-     * is true and reset this.state.redirectCalendarSelect to false.
-     * 
-     * @return {void}
-     */
-    renderRedirectCalendarSelect = () => {
-        if (this.state.redirectCalendarSelect) {
-            this.setState({
-                redirectCalendarSelect: false
-            });
-            return <Redirect to='/step-2' />
-        }
-    }
     
     render() {
         return(
             <Switch>
-                <Route path="/step-1">
+                <Route path="/date-select">
                     <DateSelect 
                         onDateConfirmed={(startDate: Date, dutyLoopId: number = 0) => this.handleDateConfirmation(startDate, dutyLoopId)}
                     />
-                    {this.renderRedirectCalendarSelect()}
                 </Route>
-                <Route path="/step-2">
+                <Route path="/calendar-select">
                     <CalendarSelect 
                         events={this.state.events}
                         dutyConfig={dutyConfig}
@@ -312,6 +293,8 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
         this.setState({
             redirectCalendarSelect: true
         });
+        // Push next page to history object to render calendar for fine-tuning
+        this.props.history.push('/calendar-select');
     }
 
     /**
@@ -390,9 +373,11 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
      * @return {void}
      */
     handleComputeAllowance() {
+        // Compute the allowance computed to App state
         this.setState({
             lastAllowanceComputed: new Allowance().compute(this.state.events)
         });
+        // Push next page to history object to render AllowanceResult page
         this.props.history.push('/allowance-result');
     }
 

@@ -20,7 +20,7 @@ const Home: React.FC = () => {
 					<p className={styles.homeBodyTitle}>
 						Shift Duty Allowance Calculator
 					</p>
-					<Button variant="contained" color="primary" className={styles.homeBodyButton} onClick={() => history.push("/step-1")}>
+					<Button variant="contained" color="primary" className={styles.homeBodyButton} onClick={() => history.push("/date-select")}>
 						Get Started
 					</Button>
 				</div>
