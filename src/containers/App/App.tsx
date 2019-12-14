@@ -1,11 +1,14 @@
 // Import library
 import React from 'react';
 import {
-    BrowserRouter as Router,
     Switch,
     Route,
-    Redirect
+    Redirect,
+    withRouter, RouteComponentProps
 } from "react-router-dom";
+import { Allowance, ComputeResult } from './Allowance';
+
+// Import CalendarEvent typing
 import CalendarEvent from './CalendarEvent';
 
 // Import config files
@@ -16,6 +19,7 @@ import dutyLoop from './DutyLoop.json';
 import { Home } from 'containers/Home';
 import { DateSelect } from 'containers/DateSelect';
 import { CalendarSelect } from 'containers/CalendarSelect';
+import { AllowanceResult } from 'containers/AllowanceResult';
 
 // Setup typings for props and state for our App
 type AppProps = {
@@ -24,17 +28,23 @@ type AppProps = {
 type AppState = {
     // Array of added shift duty events
     events: Array<CalendarEvent>
+    // Store latest compute result from Allowance class
+    lastAllowanceComputed: ComputeResult;
     // Boolean that control whether <Redirect /> to CalendarSelect container is rendered
     redirectCalendarSelect: boolean;
 }
 
 // Setup our App
-class App extends React.Component<AppProps, AppState> {
+class App extends React.Component<AppProps & RouteComponentProps, AppState> {
 
-    constructor(props: AppProps) {
+    constructor(props: AppProps & RouteComponentProps) {
         super(props);
         this.state = {
             events: [],
+            lastAllowanceComputed: {
+                month: [],
+                day: [[]]
+            },
             redirectCalendarSelect: false
         };
     }
@@ -58,26 +68,31 @@ class App extends React.Component<AppProps, AppState> {
     
     render() {
         return(
-            <Router>
-                <Switch>
-                    <Route path="/step-1">
-                        <DateSelect 
-                            onDateConfirmed={(startDate: Date, dutyLoopId: number = 0) => this.handleDateConfirmation(startDate, dutyLoopId)}
-                        />
-                        {this.renderRedirectCalendarSelect()}
-                    </Route>
-                    <Route path="/step-2">
-                        <CalendarSelect 
-                            events={this.state.events}
-                            dutyConfig={dutyConfig}
-                            onEventModification={(dateSelected: Date, duty_id: number, event_modified: number) => this.handleEventModification(dateSelected, duty_id, event_modified)}
-                        />
-                    </Route>
-                    <Route path="/">
-                        <Home />
-                    </Route>
-                </Switch>
-            </Router>
+            <Switch>
+                <Route path="/step-1">
+                    <DateSelect 
+                        onDateConfirmed={(startDate: Date, dutyLoopId: number = 0) => this.handleDateConfirmation(startDate, dutyLoopId)}
+                    />
+                    {this.renderRedirectCalendarSelect()}
+                </Route>
+                <Route path="/step-2">
+                    <CalendarSelect 
+                        events={this.state.events}
+                        dutyConfig={dutyConfig}
+                        onEventModification={(dateSelected: Date, duty_id: number, event_modified: number) => this.handleEventModification(dateSelected, duty_id, event_modified)}
+                        onConfirm={() => this.handleComputeAllowance()}
+                    />
+                </Route>
+                <Route path="/allowance-result">
+                    <AllowanceResult 
+                        allowance={this.state.lastAllowanceComputed.month}
+                        allowanceBreakdown={this.state.lastAllowanceComputed.day}
+                    />
+                </Route>
+                <Route path="/">
+                    <Home />
+                </Route>
+            </Switch>
         )
     }
 
@@ -366,6 +381,21 @@ class App extends React.Component<AppProps, AppState> {
         // No need to update state if commit is null somehow
     }
 
+    /**
+     * Handler for confirming on CalendarSelect page.
+     * 
+     * This method will called Allowance.compute and push the ComputeResult into lastAllowanceComputed
+     * in state and force an update.
+     * 
+     * @return {void}
+     */
+    handleComputeAllowance() {
+        this.setState({
+            lastAllowanceComputed: new Allowance().compute(this.state.events)
+        });
+        this.props.history.push('/allowance-result');
+    }
+
 }
 
-export default App;
+export default withRouter(App);
