@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import Button from '@material-ui/core/Button';
 import { ShiftDutyCalendar } from 'components/ShiftDutyCalendar';
 import { ModifyDutyDialog } from 'components/ModifyDutyDialog';
+import { NoDutyDialog } from 'components/NoDutyDialog';
 
 // Import custom typings for libraries
 import CalendarEvent from 'containers/App/CalendarEvent';
@@ -36,6 +37,8 @@ type CalendarSelectState = {
     modifyDialogInitialDuty: number;
     // State to set the event id that is currently being modified or -1 when in event adding mode
     modifyDialogEventId: number;
+    // State to control whether the duty not found dialog box is open or not
+    noDutyDialog: boolean;
 }
 
 // Render our calendar page for tuning the shift duty date selection
@@ -47,7 +50,8 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
             modifyDialog: false,
             modifyDialogInitialDate: new Date(),
             modifyDialogInitialDuty: 0,
-            modifyDialogEventId: -1
+            modifyDialogEventId: -1,
+            noDutyDialog: false
         };
     }
 
@@ -80,9 +84,13 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
                             onConfirmModification={(dateSelected: Date, duty_id: number) => this.handleDutyModificationConfirm(dateSelected, duty_id)}
                             onCancelModification={() => this.handleDutyModificationCancel()}
                         />
-                        <Button variant="contained" color="primary" className={styles.calendarSelectButton} onClick={() => this.props.onConfirm()}>
+                        <Button variant="contained" color="primary" className={styles.calendarSelectButton} onClick={() => this.handleComputeAllowance()}>
                             How much allowance will I get?
                         </Button>
+                        <NoDutyDialog 
+                            open={this.state.noDutyDialog}
+                            onClose={() => { this.setState({ noDutyDialog: false }) }}
+                        />
                     </header>
                 </div>
             </ThemeProvider>
@@ -161,6 +169,27 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
         this.setState({
             modifyDialog: false
         });
+    }
+
+    /**
+     * Event handler for clicking compute allowance button.
+     * 
+     * @return {void} 
+     */
+    handleComputeAllowance() {
+        // Check if there is any existing events first before computing the allowance
+        if (this.props.events.length > 0) {
+            // Events exists and ready for allowance compute
+            // Call parent component method for computing allowance
+            this.props.onConfirm();
+        }
+        else {
+            // No event exists and allowance should not be computed
+            // Instead, we should show a dialog that informed the user that no duty exists
+            this.setState({
+                noDutyDialog: true
+            });
+        }
     }
 
 } 

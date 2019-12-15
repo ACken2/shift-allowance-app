@@ -378,7 +378,8 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
      * @return {void}
      */
     handleComputeAllowance() {
-        // Compute the allowance computed to App state
+        // No need to check if any events exists since it is assumed to be checked in CalendarSelect container
+        // Compute the allowance and push it to App state
         this.setState({
             lastAllowanceComputed: new Allowance().compute(this.state.events)
         });
