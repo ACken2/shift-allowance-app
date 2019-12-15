@@ -3,7 +3,7 @@ import React from 'react';
 import { AllowanceResultUnit } from 'components/AllowanceResultUnit';
 
 // Import typings for computation result from Allowance.ts
-import { AllowanceDetail } from 'containers/App/Allowance';
+import { AllowanceDetail } from 'containers/App/AllowanceModule/Allowance';
 
 // Import CSS module stylesheet
 import styles from './AllowanceResult.module.css';

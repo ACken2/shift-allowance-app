@@ -1,8 +1,8 @@
 // Import HolidayModule for checking if a date is a public holiday
-import { HolidayAPI } from './HolidayModule';
+import { HolidayAPI } from '../HolidayModule';
 
 // Import CalendarEvent typing
-import CalendarEvent from './CalendarEvent';
+import CalendarEvent from '../CalendarEvent';
 
 // Import config files
 import allowanceConfig from './AllowanceSpec.json';

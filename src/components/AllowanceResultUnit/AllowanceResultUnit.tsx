@@ -19,7 +19,7 @@ import indigo from '@material-ui/core/colors/indigo';
 import green from '@material-ui/core/colors/green';
 
 // Import typings for computation result from Allowance.ts
-import { AllowanceDetail } from 'containers/App/Allowance';
+import { AllowanceDetail } from 'containers/App/AllowanceModule/Allowance';
 
 // Import CSS module stylesheet
 import styles from './AllowanceResultUnit.module.css';

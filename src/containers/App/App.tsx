@@ -5,7 +5,7 @@ import {
     Route,
     withRouter, RouteComponentProps
 } from "react-router-dom";
-import { Allowance, ComputeResult } from './Allowance';
+import { Allowance, ComputeResult } from './AllowanceModule/Allowance';
 
 // Import CalendarEvent typing
 import CalendarEvent from './CalendarEvent';
