@@ -75,6 +75,7 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
                             onSelectSlot={(slot: SelectedSlotInfo) => this.handleSelectSlot(slot)}
                             onSelectEvent={(event: CalendarEvent) => this.handleSelectEvent(event)}
                         />
+                        <div className={styles.calendarSelectCalendarButtonSpacer}></div>
                         <ModifyDutyDialog 
                             key={this.state.modifyDialogInitialDate.getTime()}
                             open={this.state.modifyDialog}

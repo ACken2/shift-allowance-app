@@ -29,6 +29,37 @@
 	margin-bottom: 4vh;
 }
 
+/**
+ * The intended purpose of this CSS is to compensate for the overflowed
+ * calendar when min-height property takes over to control the height of
+ * the react-big-calendar.
+ *
+ * For some reason, the min-height property sets the month view of
+ * the calendar as 400px while it still believes the whole calendar is
+ * 400px which is wrong since the toolbar also takes up about 50px which
+ * makes the whole calendar to have a visible height of ~450px while it still
+ * believes that it has only 400px in height. This also fucks up the position
+ * of the button below it since it is wrongly positioned higher.
+ *
+ * The goal is therefore to add an additional 50px spacing between the calendar
+ * and the button when the min-height property is effective, while not adding
+ * anything when the height property is active.
+ *
+ * The CSS below works by first setting a height of 50px as spacing, while setting
+ * the max-height property as calc(calc(400px - 65vh) * 10) since,
+ *
+ * 	1. Spacing should only be active when min-height property of the calendar takes over (i.e. 400px - 65vh > 0)
+ *	2. By setting max-height as calc(400px - 65vh), the max-height property of this spacer would be 0,
+ * 	   thus, making it not active when min-height property of the calendar is not active
+ *	3. Since calc(400px - 65vh) could be below 50px, it may not allow the spacer to have such height
+ *	4. As such, we scale it by *10, which would allow the spacer to have as much height as possible defined by its height property
+ *	5. At the same time, since 0 * 10 is still 0, the spacer would still be inactive when min-height property of the calendar is not active (see rationale 2)
+ */
+.calendarSelectCalendarButtonSpacer {
+	height: 50px;
+	max-height: calc(calc(400px - 65vh) * 10);
+}
+
 .calendarSelectButton {
 	width: 90%;
 	min-height: 30px;
