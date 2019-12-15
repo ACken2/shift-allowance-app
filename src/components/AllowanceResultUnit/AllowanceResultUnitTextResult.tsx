@@ -17,8 +17,8 @@ const AllowanceResultUnitTextResult: React.FC<AllowanceResultUnitTextResultProps
     // Define text to render at different progress level
     const textFullAllowance = 'Qualified for FULL shift duty allowance';
     const textHalfAllowance = 'Qualified for HALF shift duty allowance';
-    const textHalfAllowanceExtra = (50 - progress * 50 / 100) + ' more hours required for FULL shift duty allowance';
-    const textNoAllowance = (25 - progress * 50 / 100) + ' more hours required for HALF shift duty allowance';
+    const textHalfAllowanceExtra = (50 - progress * 50 / 100).toFixed(2) + ' more hours required for FULL shift duty allowance';
+    const textNoAllowance = (25 - progress * 50 / 100).toFixed(2) + ' more hours required for HALF shift duty allowance';
     // Render our textual result
     if (progress >= 100) {
         // Render a Check logo with corresponding text
