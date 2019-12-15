@@ -25,6 +25,8 @@ type ShiftDutyCalendarProps = {
 const ShiftDutyCalendar: React.FC<ShiftDutyCalendarProps> = ({ style, events, onSelectSlot, onSelectEvent }: ShiftDutyCalendarProps) => {
     // Set up localizer for react-big-calendar
     const localizer = momentLocalizer(moment);
+    // Set default date (date to display by default) as the first event in events array or current date if there is no event
+    const defaultDate = events.length > 0 ? events[0].start : new Date();
     // Render a react-big-calendar
     return (
         <div className={style}>
@@ -32,7 +34,7 @@ const ShiftDutyCalendar: React.FC<ShiftDutyCalendarProps> = ({ style, events, on
                 selectable
                 localizer={localizer}
                 events={events}
-                defaultDate={new Date()}
+                defaultDate={defaultDate}
                 longPressThreshold={100}
                 onSelectSlot={(selectedSlot: any) => onSelectSlot(selectedSlot)}
                 onSelectEvent={(selectedEvent: any) => onSelectEvent(selectedEvent)}
