@@ -27,7 +27,8 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"preprocess-ics": "tsc ./src/containers/App/HolidayModule/ICSPreprocessor.ts && node ./src/containers/App/HolidayModule/ICSPreprocessor.js && rm ./src/containers/App/HolidayModule/ICSPreprocessor.js"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
