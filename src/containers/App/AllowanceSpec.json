@@ -21,7 +21,7 @@
         ]
     },
     {
-        "applicable": [0],
+        "applicable": [0, 8],
         "slots": [
             {
                 "startHour": 0,

@@ -1,3 +1,6 @@
+// Import HolidayModule for checking if a date is a public holiday
+import { HolidayAPI } from './HolidayModule';
+
 // Import CalendarEvent typing
 import CalendarEvent from './CalendarEvent';
 
@@ -188,7 +191,13 @@ export class Allowance {
         // Compute allowance obtainable per event, which is assumed to contain no cross-day event
         return events.map((event) => {
             // First, compute the weekday (i.e. 0-6 that correspond to Sun-Sat) of the event
-            const weekday = event.start.getDay();
+            let weekday = event.start.getDay();
+            // We also need to check whether the current day is a public holiday or not
+            const holidayCheck = new HolidayAPI().isHoliday(event.start);
+            if (holidayCheck.isHoliday) {
+                // If the date is a holiday, override weekday to 8 - a special flag for public holiday
+                weekday = 8;
+            }
             // Find the applicable allowance specification
             // In allowanceConfig, each config has an "applicable" array that listed the weekday that this config could apply
             const allowanceConfigApplicable = allowanceConfig.find(x => x.applicable.includes(weekday));
@@ -227,12 +236,14 @@ export class Allowance {
                     }
                 });
             }
+            // Customize the allowance description by appending Public Holiday if weekday is 0 (Sunday) or 8 (Public Holiday)
+            let allowanceDesc: string = (weekday === 0 || weekday === 8) ? event.title + ' - Public Holiday' : event.title;
             // Return AllowanceDetail for the event
             return {
                 start: event.start,
                 end: event.end,
                 hours: allowanceHours,
-                desc: event.title
+                desc: allowanceDesc
             };
         });
     }
