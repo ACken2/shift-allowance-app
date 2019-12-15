@@ -259,45 +259,41 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
             // In that case, we just have to redirect to the calendar with a empty event state
             // With dutyIdArray computed, we can initialize the calendar
             this.initializeCalendar(startDate, []);
-            // Use redirectCalendarSelect state to redirect to CalendarSelect page
-            this.setState({
-                redirectCalendarSelect: true
-            });
-            // No need to proceed forward
-            return;
         }
-        // Get the loop specification associated with dutySpec
-        const loopSpec = dutyLoop.loop.find(x => x.id === dutySpec.loopId);
-        // Make sure the loop specification is found
-        if (!loopSpec) { return }
-        // Get the duty id loop unit
-        const dutyIdLoopUnit = dutySpec.dutyIdLoopUnit;
-        // Get the loop duration
-        const loopDuration = loopSpec.duration;
-        // Get whether the loop should ignore weekend (i.e. cross-over to weekend and next week automatically)
-        const loopIgnoreWeekend = loopSpec.ignoreWeekend;
-        // Compute dutyIdArray based on dutyIdLoopUnit, loopDuration and loopIgnoreWeekend
-        const dutyIdArray: Array<number> = [];
-        // Loop for loopDuration days
-        for (let i=0; i<loopDuration; i++) {
-            // If loopIgnoreWeekend is false, we have to check if current date is weekend or not
-            if (!loopIgnoreWeekend) {
-                // Compute current date
-                const currentDate = new Date(startDate.getTime());
-                currentDate.setDate(startDate.getDay() + i);
-                // Check if current date is weekend or not
-                if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
-                    // If true, then break the loop and not continue forward
-                    break;
+        else {
+            // Get the loop specification associated with dutySpec
+            const loopSpec = dutyLoop.loop.find(x => x.id === dutySpec.loopId);
+            // Make sure the loop specification is found
+            if (!loopSpec) { return }
+            // Get the duty id loop unit
+            const dutyIdLoopUnit = dutySpec.dutyIdLoopUnit;
+            // Get the loop duration
+            const loopDuration = loopSpec.duration;
+            // Get whether the loop should ignore weekend (i.e. cross-over to weekend and next week automatically)
+            const loopIgnoreWeekend = loopSpec.ignoreWeekend;
+            // Compute dutyIdArray based on dutyIdLoopUnit, loopDuration and loopIgnoreWeekend
+            const dutyIdArray: Array<number> = [];
+            // Loop for loopDuration days
+            for (let i=0; i<loopDuration; i++) {
+                // If loopIgnoreWeekend is false, we have to check if current date is weekend or not
+                if (!loopIgnoreWeekend) {
+                    // Compute current date
+                    const currentDate = new Date(startDate.getTime());
+                    currentDate.setDate(startDate.getDay() + i);
+                    // Check if current date is weekend or not
+                    if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+                        // If true, then break the loop and not continue forward
+                        break;
+                    }
                 }
+                // Append the associated duty id into dutyIdArray
+                // The associated duty at day i should be i % dutyIdLoopUnit.length in dutyIdLoopUnit array
+                // Example: Given length 4 as loop unit, day 1/5 should have duty id at index 1%4=1 and 5%4=1 respectively
+                dutyIdArray.push(dutyIdLoopUnit[i % dutyIdLoopUnit.length]);
             }
-            // Append the associated duty id into dutyIdArray
-            // The associated duty at day i should be i % dutyIdLoopUnit.length in dutyIdLoopUnit array
-            // Example: Given length 4 as loop unit, day 1/5 should have duty id at index 1%4=1 and 5%4=1 respectively
-            dutyIdArray.push(dutyIdLoopUnit[i % dutyIdLoopUnit.length]);
+            // With dutyIdArray computed, we can initialize the calendar
+            this.initializeCalendar(startDate, dutyIdArray);
         }
-        // With dutyIdArray computed, we can initialize the calendar
-        this.initializeCalendar(startDate, dutyIdArray);
         // Use redirectCalendarSelect state to redirect to CalendarSelect page
         this.setState({
             redirectCalendarSelect: true
