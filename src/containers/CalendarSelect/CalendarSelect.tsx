@@ -106,9 +106,9 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
      * @return {void} 
      */
     handleSelectSlot(slot: SelectedSlotInfo) {
-        if (slot.action === "click" && slot.start.getTime() === slot.end.getTime()) {
-            // Only handle click event if a single date is selected
-            // (i.e. click event triggered with identical start time and end time)
+        if ((slot.action === "click" || slot.action === "select") && slot.start.getTime() === slot.end.getTime()) {
+            // Only handle click/select event if a single date is selected
+            // (i.e. slot selection event triggered with identical start time and end time)
             // Update state to open dialog with,
             //      1. The default date selected is set as the date selected
             //      2. The default duty selected is set as None (id = 0)
