@@ -147,6 +147,9 @@ export class Allowance {
      * @return {Array<Array<CalendarEvent>>} Arrays of CalendarEvents with each array only containing events in the same months
      */
     splitEventByMonths(events: Array<CalendarEvent>): Array<Array<CalendarEvent>> {
+        // To split events consistently, we have to ensure the events array is sorted according to date first
+        // This is because the events array passed from App class is NOT guaranteed to be sorted
+        events.sort((a: CalendarEvent, b: CalendarEvent) => a.start.getTime() - b.start.getTime());
         // Temp variable for storing current month and current array
         let currentMonth = events[0].start.getMonth();
         let currentArray: Array<CalendarEvent> = [];
