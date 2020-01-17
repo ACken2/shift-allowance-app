@@ -74,6 +74,38 @@
             "endHour": 21,
             "endMinute": 48
         },
+        "override": [
+            {
+                "override_for": 0,
+                "startDate": 0,
+                "startHour": 8,
+                "startMinute": 30,
+                "endDate": 0,
+                "endHour": 17,
+                "endMinute": 18
+            },
+            {
+                "override_for": 6,
+                "startDate": 0,
+                "startHour": 8,
+                "startMinute": 30,
+                "endDate": 0,
+                "endHour": 17,
+                "endMinute": 18
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "title": "MRC",
+        "timeslot": {
+            "startDate": 0,
+            "startHour": 13,
+            "startMinute": 0,
+            "endDate": 0,
+            "endHour": 21,
+            "endMinute": 48
+        },
         "override": null
     }
 ]
