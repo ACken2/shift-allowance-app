@@ -1,7 +1,6 @@
 // Import library
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import { useHistory } from 'react-router-dom';
 
 // Import CSS module stylesheet
 import styles from './Home.module.css';
@@ -9,9 +8,13 @@ import styles from './Home.module.css';
 // Import logo of our home page
 import logo from './calendar_logo.svg';
 
+// Setup typings for props for the Home page container
+type HomeProps = {
+	onGettingStarted: Function;
+}
+
 // Render our home page
-const Home: React.FC = () => {
-	const history = useHistory();
+const Home: React.FC<HomeProps> = ({ onGettingStarted }: HomeProps) => {
 	return (
 		<div className={styles.home}>
 			<header className={styles.homeHeader}>
@@ -20,7 +23,7 @@ const Home: React.FC = () => {
 					<p className={styles.homeBodyTitle}>
 						Shift Duty Allowance Calculator
 					</p>
-					<Button variant="contained" color="primary" className={styles.homeBodyButton} onClick={() => history.push("/date-select")}>
+					<Button variant="contained" color="primary" className={styles.homeBodyButton} onClick={() => onGettingStarted()}>
 						Get Started
 					</Button>
 				</div>

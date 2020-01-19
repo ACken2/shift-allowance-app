@@ -5,6 +5,8 @@ import {
     Route,
     withRouter, RouteComponentProps
 } from "react-router-dom";
+import screenfull, { Screenfull } from "screenfull";
+import { isMobileOnly } from 'react-device-detect';
 import { Allowance, ComputeResult } from './AllowanceModule/Allowance';
 
 // Import HolidayModule for checking if a date is a public holiday
@@ -110,7 +112,7 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
                         dutyConfigModeSelected={this.state.dutyConfigMode}
                         onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
                     />
-                    <Home />
+                    <Home onGettingStarted={() => this.handleGettingStarted()} />
                 </Route>
             </Switch>
         )
@@ -286,6 +288,27 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
                 // Return the modified array
                 return cloned;
             }
+        }
+    }
+
+    /**
+     * Handle the 'Getting Started' button on Home page.
+     * 
+     * This function will redirect the app to the DateSelect page, and set the
+     * application into fullpage mode if,
+     *      1. The browser is recognized as a mobile browser (excluding tablet),
+     *      2. 65vh < 400px which indicate the CalendarSelect page could be bugged and does not display correctly,
+     * to allow the app to function correctly in a larger range of devices.
+     * 
+     * @return {void}
+     */
+    handleGettingStarted() {
+        // Push the app to DateSelect page
+        this.props.history.push("/date-select");
+        // Set the app into fullscreen mode if necessary
+        if (isMobileOnly && window.innerHeight * 0.65 < 400) {
+            // Request full screen from root <HTML> element using Screenfull library
+            (screenfull as Screenfull).request();
         }
     }
 
