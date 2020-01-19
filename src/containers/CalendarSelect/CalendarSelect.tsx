@@ -1,8 +1,10 @@
 // Import library
 import React from 'react';
+import Fab from '@material-ui/core/Fab';
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
-import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import SendIcon from '@material-ui/icons/Send';
 import { ShiftDutyCalendar } from 'components/ShiftDutyCalendar';
 import { ModifyDutyDialog } from 'components/ModifyDutyDialog';
 import { NoDutyDialog } from 'components/NoDutyDialog';
@@ -75,7 +77,15 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
                             onSelectSlot={(slot: SelectedSlotInfo) => this.handleSelectSlot(slot)}
                             onSelectEvent={(event: CalendarEvent) => this.handleSelectEvent(event)}
                         />
-                        <div className={styles.calendarSelectCalendarButtonSpacer}></div>
+                        <div className={styles.calendarSelectCalendarButtonSpacer} />
+                        <div className={styles.calendarSelectFAB}>
+                            <Fab color="primary" aria-label="add" className={styles.calendarSelectFABButton} onClick={() => this.handleAddEventButton()}>
+                                <AddIcon />
+                            </Fab>
+                            <Fab color="secondary" aria-label="compute" onClick={() => this.handleComputeAllowance()}>
+                                <SendIcon />
+                            </Fab>
+                        </div>
                         <ModifyDutyDialog 
                             key={this.state.modifyDialogInitialDate.getTime()}
                             open={this.state.modifyDialog}
@@ -85,9 +95,6 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
                             onConfirmModification={(dateSelected: Date, duty_id: number) => this.handleDutyModificationConfirm(dateSelected, duty_id)}
                             onCancelModification={() => this.handleDutyModificationCancel()}
                         />
-                        <Button variant="contained" color="primary" className={styles.calendarSelectButton} onClick={() => this.handleComputeAllowance()}>
-                            How much allowance will I get?
-                        </Button>
                         <NoDutyDialog 
                             open={this.state.noDutyDialog}
                             onClose={() => { this.setState({ noDutyDialog: false }) }}
@@ -140,6 +147,24 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
             modifyDialogInitialDate: event.start,
             modifyDialogInitialDuty: event.duty.id,
             modifyDialogEventId: event.id
+        });
+    }
+
+    /**
+     * Event handler for the add event floating button.
+     * 
+     * @return {void}
+     */
+    handleAddEventButton() {
+        // Update state to open dialog with,
+        //      1. The default date selected is set as the current date
+        //      2. The default duty selected is set as None (id = 0)
+        //      3. The event id being modified is set as -1 (as event adding mode)
+        this.setState({
+            modifyDialog: true,
+            modifyDialogInitialDate: new Date(),
+            modifyDialogInitialDuty: 0,
+            modifyDialogEventId: -1
         });
     }
 

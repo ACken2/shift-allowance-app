@@ -77,7 +77,7 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
                 <Route path="/calendar-select">
                     <NavBar 
                         backRoute={"/date-select"}
-                        nextRoute={this.state.lastAllowanceComputed.month.length > 0 ? "/allowance-result" : undefined }
+                        nextRoute={undefined}
                         disableDutyConfigChange={true}
                         dutyConfigModeSelected={this.state.dutyConfigMode}
                         onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}

@@ -60,10 +60,15 @@
 	max-height: calc(calc(400px - 65vh) * 10);
 }
 
-.calendarSelectButton {
-	width: 90%;
-	min-height: 30px;
-	margin-top: 1em !important;
-	font-size: 3vmin !important;
-	margin-bottom: 45px !important;
+.calendarSelectFAB {
+	margin: 0px;
+    top: auto;
+    right: 5vmin;
+    bottom: 5vmin;
+    left: auto;
+	position: fixed;
+}
+
+.calendarSelectFABButton {
+	margin-right: 5vmin !important;
 }
