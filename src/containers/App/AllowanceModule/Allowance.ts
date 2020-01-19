@@ -1,5 +1,6 @@
 // Import library
 import moment from 'moment';
+import { titleCase } from "title-case";
 
 // Import HolidayModule for checking if a date is a public holiday
 import { HolidayAPI } from '../HolidayModule';
@@ -250,7 +251,9 @@ export class Allowance {
                 });
             }
             // Customize the allowance description by appending Public Holiday if weekday is 0 (Sunday) or 8 (Public Holiday)
-            let allowanceDesc: string = (weekday === 0 || weekday === 8) ? event.title + ' - Public Holiday' : event.title;
+            let allowanceDesc: string = event.title; // Basic description
+            if (weekday === 0) { allowanceDesc = allowanceDesc + ' - Sunday' } // Append Sunday at the end
+            if (weekday === 8 && holidayCheck.description) { allowanceDesc = allowanceDesc + ' - ' + titleCase(holidayCheck.description) } // Append the description of the holiday at the end
             // Return AllowanceDetail for the event
             return {
                 start: event.start,
