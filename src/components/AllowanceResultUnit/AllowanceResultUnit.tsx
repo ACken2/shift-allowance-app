@@ -30,11 +30,13 @@ type AllowanceResultUnitProps = {
 	allowance: AllowanceDetail;
 	// Allowance computation result of the month displayed break down by day from Allowance.compute()
 	allowanceBreakdown: Array<AllowanceDetail>;
+	// Number of CO earned in this month
+	earnedCO: number;
 }
 
 // Render our allowance compute result unit
 // By design, each computed month would be rended as 1 single AllowanceResultUnit
-const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, allowanceBreakdown }: AllowanceResultUnitProps) => {
+const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, allowanceBreakdown, earnedCO }: AllowanceResultUnitProps) => {
 	// Format our start Date object as YYYY MMMM (e.g. 2019 November) for output as title
 	const month = moment(allowance.start).format('YYYY MMMM');
 	// Calculate the percentage to show in AllowanceProgress based on allowance.hours
@@ -104,6 +106,7 @@ const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, al
 				</div>
 				<AllowanceResultUnitTextResult 
 					progress={progress}
+					earnedCO={earnedCO}
 				/>
 			</div>
 			<ExpansionPanelColored>

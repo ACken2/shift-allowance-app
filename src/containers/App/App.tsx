@@ -54,7 +54,8 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
             events: [],
             lastAllowanceComputed: {
                 month: [],
-                day: [[]]
+                day: [[]],
+                earnedCO: []
             },
             redirectCalendarSelect: false,
             dutyConfigMode: Constant.DUTY_PY_PHER
@@ -102,6 +103,7 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
                     <AllowanceResult 
                         allowance={this.state.lastAllowanceComputed.month}
                         allowanceBreakdown={this.state.lastAllowanceComputed.day}
+                        earnedCOByMonth={this.state.lastAllowanceComputed.earnedCO}
                     />
                 </Route>
                 <Route path="/">
@@ -483,7 +485,8 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
             events: [],
             lastAllowanceComputed: {
                 month: [],
-                day: [[]]
+                day: [[]],
+                earnedCO: []
             },
             dutyConfigMode: dutyConfigMode
         });

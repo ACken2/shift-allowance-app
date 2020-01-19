@@ -1,3 +1,6 @@
+// Import library
+import moment from 'moment';
+
 // Import HolidayModule for checking if a date is a public holiday
 import { HolidayAPI } from '../HolidayModule';
 
@@ -15,10 +18,11 @@ export type AllowanceDetail = {
     hours: number; // Number of hours qualified for shift duty allowance calculation
     desc: string; // Shift duty title in ComputeResult.day, and empty string in ComputeResult.month
 }
-// Return type for overall allowance computation that included both by-month and by-day allowance break down
+// Return type for overall allowance computation that included both by-month and by-day allowance break down, and number of CO earned on each month
 export type ComputeResult = {
     month: Array<AllowanceDetail>;
     day: Array<Array<AllowanceDetail>>;
+    earnedCO: Array<number>;
 }
 
 export class Allowance {
@@ -39,6 +43,8 @@ export class Allowance {
         // Temp variable for storing our by-month and by-day allowance break down
         const allowanceMonth: Array<AllowanceDetail> = [];
         const allowanceDay: Array<Array<AllowanceDetail>> = [];
+        // Temp variable for storing the number of CO earned by-month
+        const coEarned: Array<number> = [];
         // Split cross-day event into single-day events only for easier processing
         let splittedEvent = this.splitCrossDayEvents(events);
         // Split events by months
@@ -49,14 +55,18 @@ export class Allowance {
             const allowanceByDay = this.computeAllowanceByDate(eventByMonth);
             // Aggreate allowance by month
             const allowanceByMonth = this.aggreateAllowanceByMonth(allowanceByDay);
+            // Compute CO earned in the current month
+            const coEarnedCurrentMonth = this.countCOEarnedByMonth(eventByMonth);
             // Push result to our temp array
             allowanceMonth.push(allowanceByMonth);
             allowanceDay.push(allowanceByDay);
+            coEarned.push(coEarnedCurrentMonth);
         });
         // Return computation result
         return {
             month: allowanceMonth,
-            day: allowanceDay
+            day: allowanceDay,
+            earnedCO: coEarned
         } as ComputeResult;
     }
 
@@ -275,6 +285,40 @@ export class Allowance {
             hours: totalAllowanceHour,
             desc: ''
         };
+    }
+
+    /**
+     * Count the number of CO earned due to duties in the events array.
+     * 
+     * This method assumes that only events within the same month is passed down in
+     * parameter since it does not implement any checking mechanism on whether this requirement
+     * satisified.
+     * 
+     * @param {Array<CalendarEvent>} events Array of CalendarEvent within the same month
+     * 
+     * @return {number} Number of CO earned for the month
+     */
+    countCOEarnedByMonth(events: Array<CalendarEvent>): number {
+        // Temporary variable for storing the Date that has already been counted
+        let countedDate = new Set();
+        // Initialize HolidayAPI
+        let holidayAPI = new HolidayAPI();
+        // Reduce the events array (i.e. loop for each element in array and return a single number)
+        return events.reduce((coCounted: number, event: CalendarEvent) => {
+            // Format event.start as YYYY-MM-DD
+            let startDateStr = moment(event.start).format('YYYY-MM-DD');
+            // Check if the date is a Public Holiday and has not been counted (not within countedDate set) yet
+            if (holidayAPI.isHoliday(event.start).isHoliday && !countedDate.has(startDateStr)) {
+                // Current event is situated on Public Holiday
+                // Append the current date to the countedDate set to avoid counting the same date twice
+                countedDate.add(startDateStr);
+                // Add 1 to coCounted and returns it
+                return coCounted + 1;
+            }
+            else {
+                return coCounted;
+            }
+        }, 0);
     }
 
 }

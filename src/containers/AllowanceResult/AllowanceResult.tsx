@@ -16,10 +16,12 @@ type AllowanceResultProps = {
 	// It is assumed that the breakdown of allowance[i] in month view will be located at allowanceBreakdown[i],
 	// where allowanceBreakdown[i] is an array of AllowanceDetail that contained AllowanceDetail on a day-to-day basis
 	allowanceBreakdown: Array<Array<AllowanceDetail>>;
+	// Number of CO earned by month
+	earnedCOByMonth: Array<number>;
 }
 
 // Render our allowance compute result page
-const AllowanceResult: React.FC<AllowanceResultProps> = ({ allowance, allowanceBreakdown }: AllowanceResultProps) => {
+const AllowanceResult: React.FC<AllowanceResultProps> = ({ allowance, allowanceBreakdown, earnedCOByMonth }: AllowanceResultProps) => {
 	return (
 		<div className={styles.allowanceResult}>
 			<header className={styles.allowanceResultHeader}>
@@ -30,6 +32,7 @@ const AllowanceResult: React.FC<AllowanceResultProps> = ({ allowance, allowanceB
 								key={JSON.stringify(a)}
 								allowance={a}
 								allowanceBreakdown={allowanceBreakdown[i]}
+								earnedCO={earnedCOByMonth[i]}
 							/>
 						)
 					})
