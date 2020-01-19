@@ -1,0 +1,75 @@
+[
+    {
+        "id": 0,
+        "title": "None",
+        "timeslot": null,
+        "override": null
+    },
+    {
+        "id": 1,
+        "title": "P Shift",
+        "timeslot": {
+            "startDate": 0,
+            "startHour": 15,
+            "startMinute": 10,
+            "endDate": 0,
+            "endHour": 22,
+            "endMinute": 30
+        },
+        "override": [
+            {
+                "override_for": 0,
+                "startDate": 0,
+                "startHour": 16,
+                "startMinute": 25,
+                "endDate": 0,
+                "endHour": 22,
+                "endMinute": 30
+            },
+            {
+                "override_for": 6,
+                "startDate": 0,
+                "startHour": 16,
+                "startMinute": 25,
+                "endDate": 0,
+                "endHour": 22,
+                "endMinute": 30
+            },
+            {
+                "override_for": 8,
+                "startDate": 0,
+                "startHour": 16,
+                "startMinute": 25,
+                "endDate": 0,
+                "endHour": 22,
+                "endMinute": 30
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "A Shift",
+        "timeslot": {
+            "startDate": 0,
+            "startHour": 8,
+            "startMinute": 25,
+            "endDate": 0,
+            "endHour": 16,
+            "endMinute": 30
+        },
+        "override": null
+    },
+    {
+        "id": 3,
+        "title": "N Shift",
+        "timeslot": {
+            "startDate": 0,
+            "startHour": 22,
+            "startMinute": 25,
+            "endDate": 1,
+            "endHour": 8,
+            "endMinute": 30
+        },
+        "override": null
+    }
+]

@@ -9,8 +9,42 @@
     align-content: center;
 }
 
+.navBarMode {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3vmin;
+    color: white;
+}
+
+.navBarSelect {
+    width: 100%;
+}
+
+.navBarSelectIcon {
+    color: white !important;
+}
+
+.navBarSelectIconDisabled {
+    color: #282c34 !important;
+}
+
+.navBarSelectText {
+    color: white !important;
+    text-align: center;
+}
+
 .navBarButton {
     color: white !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 3vmin !important;
+    padding-right: 3vmin !important;
+    margin-top: 1vh !important;
+}
+
+.navBarButtonDisabled {
+    color: #282c34 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     padding-left: 3vmin !important;

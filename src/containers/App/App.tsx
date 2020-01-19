@@ -7,11 +7,18 @@ import {
 } from "react-router-dom";
 import { Allowance, ComputeResult } from './AllowanceModule/Allowance';
 
+// Import HolidayModule for checking if a date is a public holiday
+import { HolidayAPI } from './HolidayModule';
+
 // Import CalendarEvent typing
 import CalendarEvent from './CalendarEvent';
 
+// Import constant
+import * as Constant from './AppConstant';
+
 // Import config files
-import dutyConfig from './DutyConfig.json';
+import dutyConfigPYPher from './DutyConfig_PY_PHER.json';
+import dutyConfigPYClerk from './DutyConfig_PY_CLERK.json';
 import dutyLoop from './DutyLoop.json';
 
 // Import our page to render
@@ -32,6 +39,8 @@ type AppState = {
     lastAllowanceComputed: ComputeResult;
     // Boolean that control whether <Redirect /> to CalendarSelect container is rendered
     redirectCalendarSelect: boolean;
+    // Number that indicates the current DutyConfig profile to use
+    dutyConfigMode: number;
 }
 
 // Setup our App
@@ -45,7 +54,8 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
                 month: [],
                 day: [[]]
             },
-            redirectCalendarSelect: false
+            redirectCalendarSelect: false,
+            dutyConfigMode: Constant.DUTY_PY_PHER
         };
     }
     
@@ -53,33 +63,71 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
         return(
             <Switch>
                 <Route path="/date-select">
-                    <NavBar backRoute={"/"} nextRoute={this.state.events.length > 0 ? "/calendar-select" : undefined } />
+                    <NavBar 
+                        backRoute={"/"}
+                        nextRoute={this.state.events.length > 0 ? "/calendar-select" : undefined }
+                        disableDutyConfigChange={false}
+                        dutyConfigModeSelected={this.state.dutyConfigMode}
+                        onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
+                    />
                     <DateSelect 
                         onDateConfirmed={(startDate: Date, dutyLoopId: number = 0) => this.handleDateConfirmation(startDate, dutyLoopId)}
                     />
                 </Route>
                 <Route path="/calendar-select">
-                    <NavBar backRoute={"/date-select"} nextRoute={this.state.lastAllowanceComputed.month.length > 0 ? "/allowance-result" : undefined } />
+                    <NavBar 
+                        backRoute={"/date-select"}
+                        nextRoute={this.state.lastAllowanceComputed.month.length > 0 ? "/allowance-result" : undefined }
+                        disableDutyConfigChange={true}
+                        dutyConfigModeSelected={this.state.dutyConfigMode}
+                        onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
+                    />
                     <CalendarSelect 
                         events={this.state.events}
-                        dutyConfig={dutyConfig}
+                        dutyConfig={this.getDutyConfigSelected()}
                         onEventModification={(dateSelected: Date, duty_id: number, event_modified: number) => this.handleEventModification(dateSelected, duty_id, event_modified)}
                         onConfirm={() => this.handleComputeAllowance()}
                     />
                 </Route>
                 <Route path="/allowance-result">
-                    <NavBar backRoute={"/calendar-select"} nextRoute={undefined} />
+                    <NavBar 
+                        backRoute={"/calendar-select"}
+                        nextRoute={undefined}
+                        disableDutyConfigChange={true}
+                        dutyConfigModeSelected={this.state.dutyConfigMode}
+                        onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
+                    />
                     <AllowanceResult 
                         allowance={this.state.lastAllowanceComputed.month}
                         allowanceBreakdown={this.state.lastAllowanceComputed.day}
                     />
                 </Route>
                 <Route path="/">
-                    <NavBar backRoute={undefined} nextRoute={undefined} />
+                    <NavBar 
+                        backRoute={undefined}
+                        nextRoute={undefined}
+                        disableDutyConfigChange={false}
+                        dutyConfigModeSelected={this.state.dutyConfigMode}
+                        onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
+                    />
                     <Home />
                 </Route>
             </Switch>
         )
+    }
+
+    /**
+     * Get the current selected DutyConfig to be used for adding duty/events into the calendar.
+     * 
+     * @return {JSON} Selected DutyConfig
+     */
+    getDutyConfigSelected() {
+        if (this.state.dutyConfigMode === Constant.DUTY_PY_CLERK) {
+            return dutyConfigPYClerk;
+        }
+        else {
+            return dutyConfigPYPher;
+        }
     }
 
     /**
@@ -98,7 +146,7 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
      */
     getEventModificationCommit(dateSelected: Date, duty_id: number, event_modified: number) {
         // Look up the duty corresponding to the duty_id
-        const duty = dutyConfig.find(x => x.id === duty_id);
+        const duty = this.getDutyConfigSelected().find(x => x.id === duty_id);
         // Ensure duty !== undefined
         if (typeof duty !== "undefined") {
             // Check if duty.timeslot is null or not
@@ -109,7 +157,15 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
                 // Check if any override is specificed in the config file
                 if (duty.override != null) {
                     // Get the day number of the date selected (0 - 6 corresponding to Sunday - Saturday)
-                    const dayNumber = dateSelected.getDay();
+                    let dayNumber = dateSelected.getDay();
+                    // Special support code for PY CLERK
+                    if (this.state.dutyConfigMode === Constant.DUTY_PY_CLERK && new HolidayAPI().isHoliday(dateSelected).isHoliday) {
+                        // Since PY CLERK has a special override where PH P Duty has to be overrided to
+                        // 16:25 - 22:30 from 15:10 - 22:30, we have to check if the date is a public holiday
+                        // Override dayNumber to 8 since we have included a override for day number 8 in DutyConfig_PY_CLERK.json
+                        // to handle this special case
+                        dayNumber = 8;
+                    }
                     // Check if any override is applicable if some override is specified
                     const override = duty.override.find(x => x.override_for === dayNumber);
                     // Override dutySpec if applicable override is found, or else use the default dutySpec
@@ -385,6 +441,29 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
         });
         // Push next page to history object to render AllowanceResult page
         this.props.history.push('/allowance-result');
+    }
+
+    /**
+     * Handler for DutyConfig mode changes in NavBar.
+     * 
+     * This method will modify this.state.dutyConfigMode to indicate such changes, while clearing
+     * any added events or computed allowance result if any.
+     * 
+     * @param {number} dutyConfigMode New DutyConfig mode selected which should be defined in AppConstant.ts
+     * 
+     * @return {void}
+     */
+    handleDutyConfigModeChange(dutyConfigMode: number) {
+        // Push the changes in DutyConfig into the App state
+        // We also clear any added event or computed allowance if any to avoid confusion
+        this.setState({
+            events: [],
+            lastAllowanceComputed: {
+                month: [],
+                day: [[]]
+            },
+            dutyConfigMode: dutyConfigMode
+        });
     }
 
 }

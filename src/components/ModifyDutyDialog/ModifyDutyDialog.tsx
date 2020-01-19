@@ -25,7 +25,7 @@ type SelectOnChangeEvent = {
     }
 }
 // Typing for DutyConfig
-type DutyConfig = typeof import("containers/App/DutyConfig.json");
+type DutyConfig = typeof import("containers/App/DutyConfig_PY_PHER.json");
 
 // Setup typings for props for this component
 type ModifyDutyDialogProps = {

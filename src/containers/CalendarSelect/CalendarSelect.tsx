@@ -15,7 +15,7 @@ import SelectedSlotInfo from 'components/ShiftDutyCalendar/SelectedSlotInfo';
 import styles from './CalendarSelect.module.css';
 
 // Typing for DutyConfig
-type DutyConfig = typeof import("containers/App/DutyConfig.json");
+type DutyConfig = typeof import("containers/App/DutyConfig_PY_PHER.json");
 
 // Setup typings for props and state for the CalendarSelect container
 type CalendarSelectProps = {
