@@ -65,7 +65,20 @@
     },
     {
         "id": 4,
-        "title": "Stagger",
+        "title": "Stagger A",
+        "timeslot": {
+            "startDate": 0,
+            "startHour": 8,
+            "startMinute": 30,
+            "endDate": 0,
+            "endHour": 17,
+            "endMinute": 18
+        },
+        "override": null
+    },
+    {
+        "id": 5,
+        "title": "Stagger P*",
         "timeslot": {
             "startDate": 0,
             "startHour": 13,
@@ -74,29 +87,10 @@
             "endHour": 21,
             "endMinute": 48
         },
-        "override": [
-            {
-                "override_for": 0,
-                "startDate": 0,
-                "startHour": 8,
-                "startMinute": 30,
-                "endDate": 0,
-                "endHour": 17,
-                "endMinute": 18
-            },
-            {
-                "override_for": 6,
-                "startDate": 0,
-                "startHour": 8,
-                "startMinute": 30,
-                "endDate": 0,
-                "endHour": 17,
-                "endMinute": 18
-            }
-        ]
+        "override": null
     },
     {
-        "id": 5,
+        "id": 6,
         "title": "MRC",
         "timeslot": {
             "startDate": 0,
