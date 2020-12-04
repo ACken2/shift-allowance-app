@@ -169,7 +169,18 @@ export class Allowance {
         // Split the events by month
         events.forEach((event) => {
             // Check if the current event is still scheduled in the currentMonth
-            if (event.start.getMonth() === currentMonth) {
+            //
+            // Amendment Note:
+            // Based on official feedback, we have to categorize an N shift duty that spans across the next month (e.g. N shift on Dec-31 to Jan-01)
+            // into the PREVIOUS month (i.e. the entire 10.25 hours from N-shift should be accounted in December).
+            // This is because the official calculation by HA will account 10.25 hours into the month of the N-shift duty only (i.e. December in the example),
+            // and 0 hour into the month of the off duty (i.e. January in the example).
+            //
+            // We are achieving this by additionally checking if both of the followings are true,
+            //      1. the duty starts on the first date of the month, and,
+            //      2. the duty starts on 00:00, indicating that this originated from a splited N-shift duty since no other duties starts on 00:00,
+            // if so, then we will group this event into the array of the previous month
+            if (event.start.getMonth() === currentMonth || (event.start.getDate() === 1 && event.start.getHours() === 0 && event.start.getMinutes() === 0)) {
                 // Push the event to currentArray if it is still on the same month
                 currentArray.push(event);
             }
