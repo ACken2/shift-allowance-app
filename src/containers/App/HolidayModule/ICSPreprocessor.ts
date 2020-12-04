@@ -81,7 +81,7 @@ function toAbsolutePath(input_path: string) {
 }
 
 // Get user input on ICS and output file path
-let icsPath = toAbsolutePath(readlineSync.question('Where is the ICS file located? (Base directory: ' + __dirname +  ') '));
-let outputPath = toAbsolutePath(readlineSync.question('Where should the output JSON file be located? (Base directory: ' + __dirname +  ') '));
+let icsPath = toAbsolutePath(readlineSync.question('Where is the ICS file located (e.g. ./HKPublicHoliday-2019-2021.ics)? '));
+let outputPath = toAbsolutePath(readlineSync.question('Where should the output JSON file be located (e.g. ./HKPublicHoliday-2019-2021.json)? '));
 // Run preprocessor
 ICSPreprocessor(icsPath, outputPath);
