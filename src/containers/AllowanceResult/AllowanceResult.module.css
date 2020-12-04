@@ -1,11 +1,12 @@
 .allowanceResult {
 	text-align: center;
+	height: 90vh;
 }
 
 .allowanceResultHeader {
 	padding-top: 1em;
 	background-color: #282c34;
-	height: 95vh;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
