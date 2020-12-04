@@ -13,22 +13,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 3vmin;
+    font-size: min(1rem, 3vmin);
     color: white;
     margin-top: 8px;
     margin-left: 8px;
-}
-
-.navBarSelect {
-    width: 100%;
-}
-
-.navBarSelectIcon {
-    color: white !important;
-}
-
-.navBarSelectIconDisabled {
-    color: #282c34 !important;
 }
 
 .navBarSelectText {

@@ -1,9 +1,8 @@
 // Import library
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import Select from '@material-ui/core/Select';
+import Switch from '@material-ui/core/Switch';
 import { IconButton } from '@material-ui/core';
-import MenuItem from '@material-ui/core/MenuItem';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
@@ -54,21 +53,12 @@ const NavBar: React.FC<NavBarProps> = ({ backRoute, nextRoute, disableDutyConfig
 		<div className={styles.navBar}>
             {renderButton(backRoute, <ArrowBackIosIcon className={styles.navBarButtonIcon} />)}
             <div className={styles.navBarMode}>
-                <Select
-                    value={dutyConfigModeSelected}
-                    defaultValue={AppConstant.DUTY_PY_PHER}
-                    onChange={(event) => onDutyConfigModeChange(event.target.value)}
-                    className={styles.navBarSelect}
-                    classes={{
-                        icon: disableDutyConfigChange ? styles.navBarIconDisabled : styles.navBarSelectIcon,
-                        select: styles.navBarSelectText
-                    }}
-                    disableUnderline={true}
-                    disabled={disableDutyConfigChange}
-                >
-                    <MenuItem value={AppConstant.DUTY_PY_PHER}>Radiographer Mode</MenuItem>
-                    <MenuItem value={AppConstant.DUTY_PY_CLERK}>Clerk Mode</MenuItem>
-                </Select>
+                <div className={styles.navBarSelectText}>Clerk</div>
+                <Switch 
+                    disabled={disableDutyConfigChange} checked={dutyConfigModeSelected === AppConstant.DUTY_PY_PHER} 
+                    onChange={() => onDutyConfigModeChange(dutyConfigModeSelected === AppConstant.DUTY_PY_PHER ? AppConstant.DUTY_PY_CLERK : AppConstant.DUTY_PY_PHER)} 
+                />
+                <div className={styles.navBarSelectText}>Radiographer</div>
             </div>
             {renderButton(nextRoute, <ArrowForwardIosIcon className={styles.navBarButtonIcon} />)}
 		</div>
