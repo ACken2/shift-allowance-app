@@ -1,5 +1,5 @@
 // Import public holiday JSON data file
-import holiday from './HKPublicHoliday-2019-2021.json';
+import holiday from './HKPublicHoliday-2020-2022.json';
 
 // Typing for the return type of isHoliday() method
 type HolidaySpec = {
