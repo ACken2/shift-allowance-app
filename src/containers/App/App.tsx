@@ -9,9 +9,6 @@ import screenfull, { Screenfull } from "screenfull";
 import { isMobileOnly } from 'react-device-detect';
 import { Allowance, ComputeResult } from './AllowanceModule/Allowance';
 
-// Import HolidayModule for checking if a date is a public holiday
-import { HolidayAPI } from './HolidayModule';
-
 // Import CalendarEvent typing
 import CalendarEvent from './CalendarEvent';
 
@@ -20,7 +17,6 @@ import * as Constant from './AppConstant';
 
 // Import config files
 import dutyConfigPYPher from './DutyConfig_PY_PHER.json';
-import dutyConfigPYClerk from './DutyConfig_PY_CLERK.json';
 import dutyLoop from './DutyLoop.json';
 
 // Import our page to render
@@ -126,11 +122,11 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
      * @return {JSON} Selected DutyConfig
      */
     getDutyConfigSelected() {
-        if (this.state.dutyConfigMode === Constant.DUTY_PY_CLERK) {
-            return dutyConfigPYClerk;
+        if (this.state.dutyConfigMode === Constant.DUTY_PY_PHER) {
+            return dutyConfigPYPher;
         }
         else {
-            return dutyConfigPYPher;
+            return dutyConfigPYPher; // Fallback
         }
     }
 
@@ -162,14 +158,6 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
                 if (duty.override != null) {
                     // Get the day number of the date selected (0 - 6 corresponding to Sunday - Saturday)
                     let dayNumber = dateSelected.getDay();
-                    // Special support code for PY CLERK
-                    if (this.state.dutyConfigMode === Constant.DUTY_PY_CLERK && new HolidayAPI().isHoliday(dateSelected).isHoliday) {
-                        // Since PY CLERK has a special override where PH P Duty has to be overrided to
-                        // 16:25 - 22:30 from 15:10 - 22:30, we have to check if the date is a public holiday
-                        // Override dayNumber to 8 since we have included a override for day number 8 in DutyConfig_PY_CLERK.json
-                        // to handle this special case
-                        dayNumber = 8;
-                    }
                     // Check if any override is applicable if some override is specified
                     const override = duty.override.find(x => x.override_for === dayNumber);
                     // Override dutySpec if applicable override is found, or else use the default dutySpec

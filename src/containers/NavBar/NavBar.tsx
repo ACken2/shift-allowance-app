@@ -1,13 +1,9 @@
 // Import library
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import Switch from '@material-ui/core/Switch';
 import { IconButton } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-
-// Import global constant
-import * as AppConstant from '../App/AppConstant';
 
 // Import CSS module stylesheet
 import styles from './NavBar.module.css';
@@ -53,12 +49,6 @@ const NavBar: React.FC<NavBarProps> = ({ backRoute, nextRoute, disableDutyConfig
 		<div className={styles.navBar}>
             {renderButton(backRoute, <ArrowBackIosIcon className={styles.navBarButtonIcon} />)}
             <div className={styles.navBarMode}>
-                <div className={styles.navBarSelectText}>Clerk</div>
-                <Switch 
-                    disabled={disableDutyConfigChange} checked={dutyConfigModeSelected === AppConstant.DUTY_PY_PHER} 
-                    onChange={() => onDutyConfigModeChange(dutyConfigModeSelected === AppConstant.DUTY_PY_PHER ? AppConstant.DUTY_PY_CLERK : AppConstant.DUTY_PY_PHER)} 
-                />
-                <div className={styles.navBarSelectText}>Radiographer</div>
             </div>
             {renderButton(nextRoute, <ArrowForwardIosIcon className={styles.navBarButtonIcon} />)}
 		</div>
