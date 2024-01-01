@@ -28,10 +28,10 @@
 		"typescript": "3.7.2"
 	},
 	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test",
-		"eject": "react-scripts eject",
+		"start": "react-scripts --openssl-legacy-provider start",
+		"build": "react-scripts --openssl-legacy-provider build",
+		"test": "react-scripts --openssl-legacy-provider test",
+		"eject": "react-scripts --openssl-legacy-provider eject",
 		"preprocess-ics": "tsc ./src/containers/App/HolidayModule/ICSPreprocessor.ts && node ./src/containers/App/HolidayModule/ICSPreprocessor.js && rm ./src/containers/App/HolidayModule/ICSPreprocessor.js"
 	},
 	"eslintConfig": {
