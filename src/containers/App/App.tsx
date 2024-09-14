@@ -6,6 +6,7 @@ import {
     withRouter, RouteComponentProps
 } from "react-router-dom";
 import screenfull, { Screenfull } from "screenfull";
+import { startOfWeek, endOfWeek, addDays, isSameDay } from 'date-fns';
 import { isMobileOnly } from 'react-device-detect';
 import { Allowance, ComputeResult } from './AllowanceModule/Allowance';
 
@@ -84,7 +85,10 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
                     <CalendarSelect 
                         events={this.state.events}
                         dutyConfig={this.getDutyConfigSelected()}
-                        onEventModification={(dateSelected: Date, duty_id: number, event_modified: number) => this.handleEventModification(dateSelected, duty_id, event_modified)}
+                        onEventModification={
+                            (dateSelected: Date, duty_id: number, event_modified: number, setForWholeWeek: boolean = false) => 
+                                this.handleEventModification(dateSelected, duty_id, event_modified, setForWholeWeek)
+                        }
                         onConfirm={() => this.handleComputeAllowance()}
                     />
                 </Route>
@@ -411,6 +415,35 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
     }
 
     /**
+     * Generates an array of working days (Monday to Friday) for the week 
+     * of the provided date. The week starts on Sunday and ends on Saturday.
+     * 
+     * @param {Date} inputDate - The date for which the week is calculated.
+     * @returns {Date[]} An array of dates representing the working days 
+     * (Monday to Friday) within the same week as the input date.
+     */
+    getWorkingDaysOfWeek(inputDate: Date): Date[] {
+        // Get the start and end of the week (assuming Sunday is the first day of the week)
+        const start = startOfWeek(inputDate, { weekStartsOn: 0 }); // weekStartsOn: 0 means Sunday
+        const end = endOfWeek(inputDate, { weekStartsOn: 0 }); // End on Saturday
+        // Loop counter
+        let currentDate = start;
+        // Temp array
+        const workingDays: Date[] = [];
+        // Loop from start of the week (Sunday) to the end (Saturday)
+        while (currentDate <= end) {
+            // Check if the current date is a working day (not a weekend)
+            // Here we define working days as Monday to Friday
+            const dayOfWeek = currentDate.getDay();
+            if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Exclude Sunday (0) and Saturday (6)
+                workingDays.push(currentDate);
+            }
+            currentDate = addDays(currentDate, 1); // Move to the next day
+        }
+        return workingDays;
+    }
+
+    /**
      * Handler for duty modification event.
      * 
      * This method will automatically handle the duty modification event by
@@ -420,22 +453,51 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
      * @param {number} duty_id The duty ID selected by the user in the modification event.
      * @param {number} event_modified The event ID of the event being modified as in the events
      *      array in state, or -1 if the user intended to add a new duty.
+     * @param {boolean} setForWholeWeek If true, the given duty_id will be set for all working days in the dateSelected.
      * 
      * @return {void}
      */
-    handleEventModification(dateSelected: Date, duty_id: number, event_modified: number) {
-        // Generate the event modification commit
-        const commit = this.getEventModificationCommit(dateSelected, duty_id, event_modified);
-        // Merge changes to the state events array if commit is not null
-        if (commit) {
-            // Merge changes to the state events array
-            const merged_event: Array<CalendarEvent> = this.mergeEventChange(this.state.events, commit);
-            // Push merged state into App state
-            this.setState({
-                events: merged_event
+    handleEventModification(dateSelected: Date, duty_id: number, event_modified: number, setForWholeWeek: boolean = false) {
+        // Temp array for commit(s)
+        const commits: CalendarEvent[] = [];
+        // Generate the event modification commit(s)
+        if (setForWholeWeek) {
+            const dates = this.getWorkingDaysOfWeek(dateSelected);
+            dates.forEach((date) => {
+                // Temp variable
+                let commit: CalendarEvent | null = null;
+                // Attempt to look for event_id that are located on the same day
+                const eventsOnTheSameDay = this.state.events.filter((e) => isSameDay(e.start, date));
+                if (eventsOnTheSameDay.length > 0) {
+                    // If there are already an event on the same day, we overwrite it
+                    commit = this.getEventModificationCommit(date, duty_id, eventsOnTheSameDay[0].id);
+                }
+                else {
+                    // Otherwise, we add a new event
+                    commit = this.getEventModificationCommit(date, duty_id, -1);
+                }
+                if (commit) {
+                    commits.push(commit);
+                }
             });
         }
-        // No need to update state if commit is null somehow
+        else {
+            const commit = this.getEventModificationCommit(dateSelected, duty_id, event_modified);
+            if (commit) {
+                commits.push(commit);
+            }
+        }
+        // Merge changes to the state events array if there are any commit
+        if (commits.length > 0) {
+            let eventState = this.state.events;
+            commits.forEach((commit) => {
+                eventState = this.mergeEventChange(eventState, commit);
+            });
+            this.setState({
+                events: eventState
+            });
+        }
+        // No need to update state if there are no commit
     }
 
     /**

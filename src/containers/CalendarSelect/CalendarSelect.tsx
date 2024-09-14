@@ -92,7 +92,9 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
                             initialDate={this.state.modifyDialogInitialDate}
                             initialDuty={this.state.modifyDialogInitialDuty}
                             dutyConfig={this.props.dutyConfig}
-                            onConfirmModification={(dateSelected: Date, duty_id: number) => this.handleDutyModificationConfirm(dateSelected, duty_id)}
+                            onConfirmModification={
+                                (dateSelected: Date, duty_id: number, setForWholeWeek: boolean) => this.handleDutyModificationConfirm(dateSelected, duty_id, setForWholeWeek)
+                            }
                             onCancelModification={() => this.handleDutyModificationCancel()}
                         />
                         <NoDutyDialog 
@@ -173,12 +175,13 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
      * 
      * @param {Date} dateSelected Date selected in ModifyDutyDialog dialog box.
      * @param {number} duty_id Duty ID selected in ModifyDutyDialog dialog box.
+     * @param {boolean} setForWholeWeek If true, the given duty_id will be set for all working days in the dateSelected.
      * 
      * @return {void} 
      */
-    handleDutyModificationConfirm(dateSelected: Date, duty_id: number) {
+    handleDutyModificationConfirm(dateSelected: Date, duty_id: number, setForWholeWeek: boolean) {
         // Forward duty modification event to <App> parent component
-        this.props.onEventModification(dateSelected, duty_id, this.state.modifyDialogEventId);
+        this.props.onEventModification(dateSelected, duty_id, this.state.modifyDialogEventId, setForWholeWeek);
         // Close the dialog box after modification is done
         this.setState({
             modifyDialog: false

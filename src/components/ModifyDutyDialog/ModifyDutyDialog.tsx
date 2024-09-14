@@ -1,11 +1,14 @@
 // Import library
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -44,7 +47,9 @@ type ModifyDutyDialogProps = {
 }
 
 // Redner our shift duty calendar
-const ModifyDutyDialog: React.FC<ModifyDutyDialogProps> = ({ open, initialDate, initialDuty, dutyConfig, onConfirmModification, onCancelModification }: ModifyDutyDialogProps) => {
+const ModifyDutyDialog: React.FC<ModifyDutyDialogProps> = (
+    { open, initialDate, initialDuty, dutyConfig, onConfirmModification, onCancelModification }: ModifyDutyDialogProps
+) => {
     // Using Hook to manage internal state
     // State for keeping track of the duty selected
     const [selectedDuty, setSelectedDuty] = React.useState<number | null>(initialDuty);
@@ -53,6 +58,8 @@ const ModifyDutyDialog: React.FC<ModifyDutyDialogProps> = ({ open, initialDate, 
     }
     // State for keeping track of the date selected
     const [selectedDate, setSelectedDate] = React.useState<Date | null>(initialDate);
+    // State for keeping track of whether the option to set for the entire week is enabled
+    const [setForWholeWeek, setSetForWholeWeek] = React.useState<boolean>(false);
     // Use dark theme such that <KeyboardDatePicker> would be colored correctly
     const defaultMaterialTheme = createMuiTheme({
         palette: {
@@ -99,19 +106,33 @@ const ModifyDutyDialog: React.FC<ModifyDutyDialogProps> = ({ open, initialDate, 
                             <DialogContentText>
                                 To modify the duty on the selected date, please select a duty from the list below and click confirm.
                             </DialogContentText>
-                            <div className={styles.inputDivWrapper}>
-                                <KeyboardDatePicker
-                                    margin="normal"
-                                    id="date-picker-dialog"
-                                    label="Date Selected"
-                                    format="d MMMM yy, iii"
-                                    value={selectedDate}
-                                    onChange={setSelectedDate}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </div>
+                            <Grid
+                                container
+                                spacing={1}
+                                direction="row"
+                                alignItems="center"
+                                component='div'
+                            >
+                                <Grid item sm={12} md={6} className={styles.datePicker}>
+                                    <KeyboardDatePicker
+                                        margin="normal"
+                                        id="date-picker-dialog"
+                                        label="Date Selected"
+                                        format="d MMMM yy, iii"
+                                        value={selectedDate}
+                                        onChange={setSelectedDate}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                    />
+                                    </Grid>
+                                    <Grid item sm={12} md={6} className={styles.setForWholeWeekCheckbox}>
+                                        <FormControlLabel 
+                                            control={<Checkbox checked={setForWholeWeek} onChange={() => setSetForWholeWeek(!setForWholeWeek)} />} 
+                                            label="Set for Entire Week" 
+                                        />
+                                    </Grid>
+                            </Grid>
                             <div className={styles.inputDivWrapper}>
                                 <FormControl>
                                     <InputLabel>Duty</InputLabel>
@@ -133,10 +154,16 @@ const ModifyDutyDialog: React.FC<ModifyDutyDialogProps> = ({ open, initialDate, 
                             </div>
                         </DialogContent>
                         <DialogActions>
-                            <Button color="secondary" onClick={() => onCancelModification()}>
+                            <Button color="secondary" onClick={() => {
+                                setSetForWholeWeek(false);
+                                onCancelModification();
+                            }}>
                                 Cancel
                             </Button>
-                            <Button color="primary" onClick={() => onConfirmModification(selectedDate, selectedDuty)}>
+                            <Button color="primary" onClick={() => {
+                                setSetForWholeWeek(false);
+                                onConfirmModification(selectedDate, selectedDuty, setForWholeWeek);
+                            }}>
                                 Confirm
                             </Button>
                         </DialogActions>
