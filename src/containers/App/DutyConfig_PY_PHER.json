@@ -101,5 +101,18 @@
             "endMinute": 48
         },
         "override": null
+    },
+    {
+        "id": 7,
+        "title": "CCL-B",
+        "timeslot": {
+            "startDate": 0,
+            "startHour": 13,
+            "startMinute": 42,
+            "endDate": 0,
+            "endHour": 22,
+            "endMinute": 30
+        },
+        "override": null
     }
 ]
