@@ -1,5 +1,5 @@
 .navBar {
-    height: 5vh;
+    height: 5%;
     min-height: 32px;
     width: 100vw;
     background-color: #282c34;
@@ -45,5 +45,5 @@
 }
 
 .navBarButtonIcon {
-    font-size: calc(18px + 1vh) !important;
+    font-size: 1em !important;
 }
