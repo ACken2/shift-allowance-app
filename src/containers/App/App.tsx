@@ -45,6 +45,8 @@ type AppState = {
 // Setup our App
 class App extends React.Component<AppProps & RouteComponentProps, AppState> {
 
+    private rootDivRef: React.RefObject<HTMLDivElement>;
+
     constructor(props: AppProps & RouteComponentProps) {
         super(props);
         this.state = {
@@ -57,66 +59,78 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
             redirectCalendarSelect: false,
             dutyConfigMode: Constant.DUTY_PY_PHER
         };
+        this.rootDivRef = React.createRef(); // Creating a ref for the root div
+    }
+
+    componentDidMount() {
+        if (this.rootDivRef.current) {
+            // Setting the rootDiv to have the entire availHeight
+            // This is used to fix the vh inconsistency in some mobile browser upon
+            // initial render which causes the Home page to be not centered properly
+            this.rootDivRef.current.style.height = `${window.screen.availHeight}px`;
+        }
     }
     
     render() {
         return(
-            <Switch>
-                <Route path="/date-select">
-                    <NavBar 
-                        backRoute={"/"}
-                        nextRoute={this.state.events.length > 0 ? "/calendar-select" : undefined }
-                        disableDutyConfigChange={false}
-                        dutyConfigModeSelected={this.state.dutyConfigMode}
-                        onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
-                    />
-                    <DateSelect 
-                        onDateConfirmed={(startDate: Date, dutyLoopId: number = 0) => this.handleDateConfirmation(startDate, dutyLoopId)}
-                    />
-                </Route>
-                <Route path="/calendar-select">
-                    <NavBar 
-                        backRoute={"/date-select"}
-                        nextRoute={undefined}
-                        disableDutyConfigChange={true}
-                        dutyConfigModeSelected={this.state.dutyConfigMode}
-                        onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
-                    />
-                    <CalendarSelect 
-                        events={this.state.events}
-                        dutyConfig={this.getDutyConfigSelected()}
-                        onEventModification={
-                            (dateSelected: Date, duty_id: number, event_modified: number, setForWholeWeek: boolean = false) => 
-                                this.handleEventModification(dateSelected, duty_id, event_modified, setForWholeWeek)
-                        }
-                        onConfirm={() => this.handleComputeAllowance()}
-                    />
-                </Route>
-                <Route path="/allowance-result">
-                    <NavBar 
-                        backRoute={"/calendar-select"}
-                        nextRoute={undefined}
-                        disableDutyConfigChange={true}
-                        dutyConfigModeSelected={this.state.dutyConfigMode}
-                        onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
-                    />
-                    <AllowanceResult 
-                        allowance={this.state.lastAllowanceComputed.month}
-                        allowanceBreakdown={this.state.lastAllowanceComputed.day}
-                        earnedCOByMonth={this.state.lastAllowanceComputed.earnedCO}
-                    />
-                </Route>
-                <Route path="/">
-                    <NavBar 
-                        backRoute={undefined}
-                        nextRoute={undefined}
-                        disableDutyConfigChange={false}
-                        dutyConfigModeSelected={this.state.dutyConfigMode}
-                        onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
-                    />
-                    <Home onGettingStarted={() => this.handleGettingStarted()} />
-                </Route>
-            </Switch>
+            <div ref={this.rootDivRef}>
+                <Switch>
+                    <Route path="/date-select">
+                        <NavBar 
+                            backRoute={"/"}
+                            nextRoute={this.state.events.length > 0 ? "/calendar-select" : undefined }
+                            disableDutyConfigChange={false}
+                            dutyConfigModeSelected={this.state.dutyConfigMode}
+                            onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
+                        />
+                        <DateSelect 
+                            onDateConfirmed={(startDate: Date, dutyLoopId: number = 0) => this.handleDateConfirmation(startDate, dutyLoopId)}
+                        />
+                    </Route>
+                    <Route path="/calendar-select">
+                        <NavBar 
+                            backRoute={"/date-select"}
+                            nextRoute={undefined}
+                            disableDutyConfigChange={true}
+                            dutyConfigModeSelected={this.state.dutyConfigMode}
+                            onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
+                        />
+                        <CalendarSelect 
+                            events={this.state.events}
+                            dutyConfig={this.getDutyConfigSelected()}
+                            onEventModification={
+                                (dateSelected: Date, duty_id: number, event_modified: number, setForWholeWeek: boolean = false) => 
+                                    this.handleEventModification(dateSelected, duty_id, event_modified, setForWholeWeek)
+                            }
+                            onConfirm={() => this.handleComputeAllowance()}
+                        />
+                    </Route>
+                    <Route path="/allowance-result">
+                        <NavBar 
+                            backRoute={"/calendar-select"}
+                            nextRoute={undefined}
+                            disableDutyConfigChange={true}
+                            dutyConfigModeSelected={this.state.dutyConfigMode}
+                            onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
+                        />
+                        <AllowanceResult 
+                            allowance={this.state.lastAllowanceComputed.month}
+                            allowanceBreakdown={this.state.lastAllowanceComputed.day}
+                            earnedCOByMonth={this.state.lastAllowanceComputed.earnedCO}
+                        />
+                    </Route>
+                    <Route path="/">
+                        <NavBar 
+                            backRoute={undefined}
+                            nextRoute={undefined}
+                            disableDutyConfigChange={false}
+                            dutyConfigModeSelected={this.state.dutyConfigMode}
+                            onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
+                        />
+                        <Home onGettingStarted={() => this.handleGettingStarted()} />
+                    </Route>
+                </Switch>
+            </div>
         )
     }
 
