@@ -1,11 +1,11 @@
 .home {
 	height: 95vh;
-	overflow-y: scroll;
 	text-align: center;
 }
 
 .homeLogo {
-	height: 40vmin;
+	height: 35vmin;
+	max-height: 230px;
 }
 
 .homeHeader {
@@ -15,31 +15,29 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	font-size: calc(10px + 2vmin);
+	font-size: 1.2em;
 	color: white;
 }
 
 .homeBody {
-	width: 60vw;
+	max-width: 100%;
 }
 
 .homeBodyTitle {
 	width: 100%;
-	font-size: 5.5vmin;
+	font-size: 1.2em;
 }
 
 .homeBodyButton {
 	width: 100%;
-	height: 10vmin;
-	font-size: 3.5vmin !important;
+    font-size: 0.8em !important;
+    padding: 10px !important;
 }
 
 .homeFooter {
 	height: 5vh;
 	min-height: 32px;
-	font-size: calc(5px + 1vmin);
 	background-color: #282c34;
-	color: white;
 	margin: 0;
 	display: flex;
     justify-content: center;

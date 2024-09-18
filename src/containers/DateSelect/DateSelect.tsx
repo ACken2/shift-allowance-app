@@ -47,18 +47,6 @@ const DateSelect: React.FC<DateSelectProps> = ({ onDateConfirmed }: DateSelectPr
             }
         }
     });
-    // Compute scale ratio for <KeyboardDatePicker> since it can only be scaled that way
-    // We also impose a minimum scale of 1
-    const scale_ratio = Math.max(
-        Math.min( 
-            window.screen.width / 360,
-            window.screen.height / 640
-        ),
-        1
-    );
-    const scale_css = 'scale(' + scale_ratio + ')';
-    // Compute the margin bottom css for <KeyboardDatePicker> to correct for the div size
-    const margin_bottom_css = ((scale_ratio - 1) * 72) + 'px';
     return (
         <ThemeProvider theme={defaultMaterialTheme}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -67,7 +55,7 @@ const DateSelect: React.FC<DateSelectProps> = ({ onDateConfirmed }: DateSelectPr
                         <img src={logo} className={styles.dateSelectLogo} alt="logo" />
                         <div className={styles.dateSelectBody}>
                             <p className={styles.dateSelectBodyText}>Pick the date when your shift duty begins</p>
-                            <div style={{transform: scale_css, marginBottom: margin_bottom_css}}>
+                            <div className={styles.datePicker}>
                                 <KeyboardDatePicker
                                     margin="normal"
                                     id="date-picker-dialog"
@@ -91,7 +79,7 @@ const DateSelect: React.FC<DateSelectProps> = ({ onDateConfirmed }: DateSelectPr
                         </div>
                     </header>
                     <footer className={styles.dateSelectFooter}>
-                        <div className="center-div">
+                        <div className="icon-footer">
                             Icons made by <a href="https://www.flaticon.com/authors/darius-dan" title="Darius Dan">Darius Dan</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
                         </div>
                     </footer>

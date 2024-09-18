@@ -1,12 +1,12 @@
 .dateSelect {
 	height: 95vh;
 	overflow-x: hidden;
-	overflow-y: scroll;
 	text-align: center;
 }
 
 .dateSelectLogo {
-	height: 30vmin;
+	height: 35vmin;
+	max-height: 190px;
 }
 
 .dateSelectHeader {
@@ -16,17 +16,22 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	font-size: calc(10px + 2vmin);
+	font-size: 1.2em;
 	color: white;
 }
 
 .dateSelectBody {
-	width: 60vw;
+	max-width: 100%;
+}
+
+.datePicker {
+	transform: scale(1.2);
+    margin-bottom: 32px;
 }
 
 .dateSelectBodyText {
 	width: 100%;
-	font-size: 5vmin;
+	font-size: 1.2em;
 	margin-block-start: 4vh;
     margin-block-end: 4vh;
 }
@@ -35,24 +40,23 @@
 	height: 10vh;
 	margin-top: 4vh;
 	display: flex;
-    justify-content: space-between;
+    justify-content: center;
     flex-direction: row;
     align-items: center;
+	column-gap: 20px;
 }
 
 .dateSelectBodyButton {
 	width: 40%;
     height: 75%;
-    font-size: 4vmin !important;
-    line-height: 4vmin !important;
+    font-size: 0.8em !important;
+    padding: 10px !important;
 }
 
 .dateSelectFooter {
 	height: 5vh;
 	min-height: 32px;
-	font-size: calc(5px + 1vmin);
 	background-color: #282c34;
-	color: white;
 	margin: 0;
 	display: flex;
     justify-content: center;

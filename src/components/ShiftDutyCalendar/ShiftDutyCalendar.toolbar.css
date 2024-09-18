@@ -39,5 +39,5 @@
 /* Override the font size of button and the text that said the current month */
 /* Using vmin to provide better screen size variation support */
 .rbc-btn-group button, .rbc-toolbar-label {
-    font-size: 4vmin;
+    font-size: 1em;
 }

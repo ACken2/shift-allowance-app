@@ -77,11 +77,11 @@ const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, al
 	// Customize ListItemText with colors
 	const ListItemTextStyled = withStyles({
 		primary: {
-			fontSize: 'calc(10px + 1vmin)'
+			fontSize: '0.8em'
 		},
 		secondary: {
 			color: 'white',
-			fontSize: 'calc(10px + 0.75vmin)'
+			fontSize: '0.7em'
 		}
 	})(ListItemText);
 	// Format the progress in terms of text
