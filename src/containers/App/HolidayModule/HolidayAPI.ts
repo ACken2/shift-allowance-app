@@ -11,8 +11,8 @@ type HolidaySpec = {
 
 export default class HolidayAPI {
 
-    // Hong Kong holiday iCal URL with corsproxy
-    private static iCalURL = "https://corsproxy.io/?https://www.1823.gov.hk/common/ical/en.ics";
+    // Hong Kong holiday iCal URL with CORS proxy
+    private static iCalURL = "https://us-central1-always-free-216810.cloudfunctions.net/Hong-Kong-1823-iCal-CORS-proxy";
     // Array of holiday as ProcessedEvent[]
     private static holiday: ProcessedEvent[] | undefined;
     // Array containing the timestamp of each holiday for quick comparision
