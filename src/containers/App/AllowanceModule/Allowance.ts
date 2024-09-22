@@ -38,9 +38,9 @@ export class Allowance {
      * 
      * @param {Array<CalendarEvent>} events Array of CalendarEvents that described the duties of the user
      * 
-     * @return {ComputeResult} Shift duty allowance computation result breakdown by month and by day
+     * @return {Promise<ComputeResult>} Shift duty allowance computation result breakdown by month and by day
      */
-    compute(events: Array<CalendarEvent>): ComputeResult {
+    async compute(events: Array<CalendarEvent>): Promise<ComputeResult> {
         // Temp variable for storing our by-month and by-day allowance break down
         const allowanceMonth: Array<AllowanceDetail> = [];
         const allowanceDay: Array<Array<AllowanceDetail>> = [];
@@ -51,18 +51,18 @@ export class Allowance {
         // Split events by months
         let eventByMonths = this.splitEventByMonths(splittedEvent);
         // Compute allowance month-by-month
-        eventByMonths.forEach((eventByMonth) => {
+        for (const eventByMonth of eventByMonths) {
             // Compute allowance by day first
-            const allowanceByDay = this.computeAllowanceByDate(eventByMonth);
+            const allowanceByDay = await this.computeAllowanceByDate(eventByMonth);
             // Aggreate allowance by month
             const allowanceByMonth = this.aggreateAllowanceByMonth(allowanceByDay);
             // Compute CO earned in the current month
-            const coEarnedCurrentMonth = this.countCOEarnedByMonth(eventByMonth);
+            const coEarnedCurrentMonth = await this.countCOEarnedByMonth(eventByMonth);
             // Push result to our temp array
             allowanceMonth.push(allowanceByMonth);
             allowanceDay.push(allowanceByDay);
             coEarned.push(coEarnedCurrentMonth);
-        });
+        }
         // Return computation result
         return {
             month: allowanceMonth,
@@ -209,16 +209,16 @@ export class Allowance {
      * 
      * @param {Array<CalendarEvent>} events Array of CalendarEvents that contains no cross-day events
      * 
-     * @return {Array<AllowanceDetail>} Array of AllowanceDetail, each mapped to its corresponding event in events array, 
+     * @return {Promise<Array<AllowanceDetail>>} Array of AllowanceDetail, each mapped to its corresponding event in events array, 
      *      that described the number of hours from the event that satisified for calculation in shift duty allowance
      */
-    computeAllowanceByDate(events: Array<CalendarEvent>): Array<AllowanceDetail> {
+    async computeAllowanceByDate(events: Array<CalendarEvent>): Promise<Array<AllowanceDetail>> {
         // Compute allowance obtainable per event, which is assumed to contain no cross-day event
-        return events.map((event) => {
+        return await Promise.all(events.map(async (event) => {
             // First, compute the weekday (i.e. 0-6 that correspond to Sun-Sat) of the event
             let weekday = event.start.getDay();
             // We also need to check whether the current day is a public holiday or not
-            const holidayCheck = new HolidayAPI().isHoliday(event.start);
+            const holidayCheck = await HolidayAPI.isHoliday(event.start);
             if (holidayCheck.isHoliday) {
                 // If the date is a holiday, override weekday to 8 - a special flag for public holiday
                 weekday = 8;
@@ -272,7 +272,7 @@ export class Allowance {
                 hours: allowanceHours,
                 desc: allowanceDesc
             };
-        });
+        }));
     }
 
     /**
@@ -310,29 +310,27 @@ export class Allowance {
      * 
      * @param {Array<CalendarEvent>} events Array of CalendarEvent within the same month
      * 
-     * @return {number} Number of CO earned for the month
+     * @return {Promise<number>} Number of CO earned for the month
      */
-    countCOEarnedByMonth(events: Array<CalendarEvent>): number {
+    async countCOEarnedByMonth(events: Array<CalendarEvent>): Promise<number> {
         // Temporary variable for storing the Date that has already been counted
         let countedDate = new Set();
-        // Initialize HolidayAPI
-        let holidayAPI = new HolidayAPI();
         // Reduce the events array (i.e. loop for each element in array and return a single number)
-        return events.reduce((coCounted: number, event: CalendarEvent) => {
+        return await events.reduce(async (coCounted: Promise<number>, event: CalendarEvent) => {
             // Format event.start as YYYY-MM-DD
             let startDateStr = moment(event.start).format('YYYY-MM-DD');
             // Check if the date is a Public Holiday and has not been counted (not within countedDate set) yet
-            if (holidayAPI.isHoliday(event.start).isHoliday && !countedDate.has(startDateStr)) {
+            if ((await HolidayAPI.isHoliday(event.start)).isHoliday && !countedDate.has(startDateStr)) {
                 // Current event is situated on Public Holiday
                 // Append the current date to the countedDate set to avoid counting the same date twice
                 countedDate.add(startDateStr);
                 // Add 1 to coCounted and returns it
-                return coCounted + 1;
+                return (await coCounted) + 1;
             }
             else {
                 return coCounted;
             }
-        }, 0);
+        }, Promise.resolve(0));
     }
 
 }

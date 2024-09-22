@@ -1,5 +1,5 @@
-// Import public holiday JSON data file
-import holiday from './HKPublicHoliday-2022-2024.json';
+// Import dependencies
+import ICSProcessor, { ProcessedEvent } from './ICSProcessor';
 
 // Typing for the return type of isHoliday() method
 type HolidaySpec = {
@@ -11,15 +11,37 @@ type HolidaySpec = {
 
 export default class HolidayAPI {
 
+    // Hong Kong holiday iCal URL with corsproxy
+    private static iCalURL = "https://corsproxy.io/?https://www.1823.gov.hk/common/ical/en.ics";
+    // Array of holiday as ProcessedEvent[]
+    private static holiday: ProcessedEvent[] | undefined;
     // Array containing the timestamp of each holiday for quick comparision
-    holidayTimestamp: Array<number> = [];
+    private static holidayTimestamp: Array<number> | undefined;
+    // Promise that resolve when HolidayAPI has been initialized
+    private static initializePromise: Promise<void> | undefined;
 
     /**
-     * Initialize the HolidayAPI class.
+     * Begin the process to initialize the HolidayAPI class.
+     * 
+     * Subsequent method should await to initializePromise before using holiday or holidayTimestamp.
      */
-    constructor() {
+    public static initialize() {
+        // Begin initialization
+        if (this.initializePromise === undefined && (this.holiday === undefined || this.holidayTimestamp === undefined)) {
+            this.initializePromise = this.initializeInternal();
+        }
+    }
+
+    /**
+     * Actual code that initialize the HolidayAPI class.
+     */
+    private static async initializeInternal() {
+        // Get the iCal
+        const ical = (await (await fetch(this.iCalURL)).text());
+        // Process iCal into ParsedICSEvent
+        this.holiday = ICSProcessor(ical);
         // Initialize the holidayTimestamp array
-        this.holidayTimestamp = holiday.map((h) => {
+        this.holidayTimestamp = this.holiday.map((h) => {
             return new Date(h.date).getTime();
         });
     }
@@ -37,28 +59,37 @@ export default class HolidayAPI {
      * 
      * @return {HolidaySpec} HolidaySpec object containing isHoliday and description field.
      */
-    isHoliday(date: Date): HolidaySpec {
-        // Clone the date object provided
-        const dateToTest = new Date(date.getTime());
-        // Set hours, minutes, seconds and miliseconds to 0
-        dateToTest.setHours(0);
-        dateToTest.setMinutes(0);
-        dateToTest.setSeconds(0);
-        dateToTest.setMilliseconds(0);
-        // If the given date is a holiday, then holidayTimestamp should contain its timestamp
-        const indexInArray = this.holidayTimestamp.indexOf(dateToTest.getTime());
-        if (indexInArray === -1) {
-            // Not a holiday
-            return {
-                isHoliday: false,
-                description: null
-            }
+    public static async isHoliday(date: Date): Promise<HolidaySpec> {
+        if (this.holiday === undefined || this.holidayTimestamp === undefined) {
+            // If holiday and holidayTimestamp is not yet ready, we call initialize to initialize them
+            this.initialize();
+            await this.initializePromise;
+            // And then return isHoliday
+            return this.isHoliday(date);
         }
         else {
-            // It is a holiday!
-            return {
-                isHoliday: true,
-                description: holiday[indexInArray].description
+            // Clone the date object provided
+            const dateToTest = new Date(date.getTime());
+            // Set hours, minutes, seconds and miliseconds to 0
+            dateToTest.setHours(0);
+            dateToTest.setMinutes(0);
+            dateToTest.setSeconds(0);
+            dateToTest.setMilliseconds(0);
+            // If the given date is a holiday, then holidayTimestamp should contain its timestamp
+            const indexInArray = this.holidayTimestamp.indexOf(dateToTest.getTime());
+            if (indexInArray === -1) {
+                // Not a holiday
+                return {
+                    isHoliday: false,
+                    description: null
+                }
+            }
+            else {
+                // It is a holiday!
+                return {
+                    isHoliday: true,
+                    description: this.holiday[indexInArray].description
+                }
             }
         }
     }

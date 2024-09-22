@@ -13,6 +13,9 @@ import { Allowance, ComputeResult } from './AllowanceModule/Allowance';
 // Import CalendarEvent typing
 import CalendarEvent from './CalendarEvent';
 
+// Import HolidayModule
+import { HolidayAPI } from './HolidayModule';
+
 // Import constant
 import * as Constant from './AppConstant';
 
@@ -49,6 +52,7 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
 
     constructor(props: AppProps & RouteComponentProps) {
         super(props);
+        HolidayAPI.initialize(); // Initialize HolidayAPI
         this.state = {
             events: [],
             lastAllowanceComputed: {
@@ -525,11 +529,13 @@ class App extends React.Component<AppProps & RouteComponentProps, AppState> {
     handleComputeAllowance() {
         // No need to check if any events exists since it is assumed to be checked in CalendarSelect container
         // Compute the allowance and push it to App state
-        this.setState({
-            lastAllowanceComputed: new Allowance().compute(this.state.events)
+        new Allowance().compute(this.state.events).then((allowance) => {
+            this.setState({
+                lastAllowanceComputed: allowance
+            });
+            // Push next page to history object to render AllowanceResult page
+            this.props.history.push('/allowance-result');
         });
-        // Push next page to history object to render AllowanceResult page
-        this.props.history.push('/allowance-result');
     }
 
     /**
