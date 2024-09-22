@@ -2,6 +2,7 @@
 	"name": "shift-allowance-app",
 	"version": "1.2.0",
 	"author": "Ken Sze <acken2@outlook.com>",
+	"homepage": "/#",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/ACken2/shift-allowance-app.git"
