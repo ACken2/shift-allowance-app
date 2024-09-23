@@ -4,7 +4,7 @@ This repository store the code for the source code for the shift duty allowance 
 
 ## Available Online Now!
 
-This web application is available [here](https://radtech.dev) hosted on Google Cloud Platform.
+This web application is available [here](https://08301718.xyz) hosted on GitHub Pages.
 
 ## Running and Debugging the App Locally
 
