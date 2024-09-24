@@ -65,7 +65,7 @@
     },
     {
         "id": 4,
-        "title": "Stagger A",
+        "title": "A* Stagger",
         "timeslot": {
             "startDate": 0,
             "startHour": 8,
@@ -78,7 +78,7 @@
     },
     {
         "id": 5,
-        "title": "Stagger P*",
+        "title": "P* Stagger",
         "timeslot": {
             "startDate": 0,
             "startHour": 13,
