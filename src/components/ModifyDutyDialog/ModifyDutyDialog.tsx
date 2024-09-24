@@ -15,7 +15,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import { createMuiTheme } from "@material-ui/core";
+import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from "@material-ui/styles";
 
 // Import CSS module stylesheet
@@ -61,7 +61,7 @@ const ModifyDutyDialog: React.FC<ModifyDutyDialogProps> = (
     // State for keeping track of whether the option to set for the entire week is enabled
     const [setForWholeWeek, setSetForWholeWeek] = React.useState<boolean>(false);
     // Use dark theme such that <KeyboardDatePicker> would be colored correctly
-    const defaultMaterialTheme = createMuiTheme({
+    const defaultMaterialTheme = createTheme({
         palette: {
             type: 'dark'
         },

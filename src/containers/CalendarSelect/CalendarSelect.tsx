@@ -1,7 +1,7 @@
 // Import library
 import React from 'react';
 import Fab from '@material-ui/core/Fab';
-import { createMuiTheme } from "@material-ui/core";
+import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from "@material-ui/styles";
 import AddIcon from '@material-ui/icons/Add';
 import SendIcon from '@material-ui/icons/Send';
@@ -59,7 +59,7 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
 
     render() {
         // Use dark theme
-        const defaultMaterialTheme = createMuiTheme({
+        const defaultMaterialTheme = createTheme({
             palette: {
                 type: 'dark'
             }

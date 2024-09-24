@@ -6,7 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import { createMuiTheme } from "@material-ui/core";
+import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from "@material-ui/styles";
 
 // Setup typings for props for this component
@@ -20,7 +20,7 @@ type NoDutyDialogProps = {
 // Redner our shift duty calendar
 const NoDutyDialog: React.FC<NoDutyDialogProps> = ({ open, onClose }: NoDutyDialogProps) => {
     // Use dark theme such that <KeyboardDatePicker> would be colored correctly
-    const defaultMaterialTheme = createMuiTheme({
+    const defaultMaterialTheme = createTheme({
         palette: {
             type: 'dark'
         },

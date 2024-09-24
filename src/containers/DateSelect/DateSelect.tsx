@@ -2,7 +2,7 @@
 import React from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import { createMuiTheme } from "@material-ui/core";
+import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from "@material-ui/styles";
 import Button from '@material-ui/core/Button';
 
@@ -27,7 +27,7 @@ const DateSelect: React.FC<DateSelectProps> = ({ onDateConfirmed }: DateSelectPr
         new Date()
     );
     // Use dark theme such that <KeyboardDatePicker> would be colored correctly
-    const defaultMaterialTheme = createMuiTheme({
+    const defaultMaterialTheme = createTheme({
         palette: {
             type: 'dark'
         },
