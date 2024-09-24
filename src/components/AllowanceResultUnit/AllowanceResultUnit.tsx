@@ -7,9 +7,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionActions';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AllowanceResultUnitTextResult from './AllowanceResultUnitTextResult';
 
@@ -67,13 +67,13 @@ const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, al
 			backgroundColor: color
 		},
 	})(LinearProgress);
-	// Customize ExpansionPanel with colors
-	const ExpansionPanelColored = withStyles({
+	// Customize Accordion with colors
+	const AccordionColored = withStyles({
 		root: {
 			color: 'white',
 			backgroundColor: '#424242'
 		}
-	})(ExpansionPanel);
+	})(Accordion);
 	// Customize ListItemText with colors
 	const ListItemTextStyled = withStyles({
 		primary: {
@@ -109,14 +109,14 @@ const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, al
 					earnedCO={earnedCO}
 				/>
 			</div>
-			<ExpansionPanelColored>
-				<ExpansionPanelSummary
+			<AccordionColored>
+				<AccordionSummary
 					expandIcon={<ExpandMoreIcon className={styles.allowanceResultUnitExpandIcon} />}
 					aria-controls="panel1a-content"
 				>
 					<Typography className={styles.allowanceResultUnitExpandText}>Detailed Breakdown</Typography>
-				</ExpansionPanelSummary>
-				<ExpansionPanelDetails>
+				</AccordionSummary>
+				<AccordionDetails>
 					<List dense={true}>
 						{
 							allowanceBreakdown.map((allowance) => {
@@ -131,8 +131,8 @@ const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, al
 							})
 						}
 					</List>
-				</ExpansionPanelDetails>
-			</ExpansionPanelColored>
+				</AccordionDetails>
+			</AccordionColored>
 		</div>
 	);
 }
