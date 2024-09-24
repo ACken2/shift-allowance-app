@@ -22,6 +22,7 @@ import green from '@material-ui/core/colors/green';
 import { AllowanceDetail } from 'containers/App/AllowanceModule/Allowance';
 
 // Import CSS module stylesheet
+import './AllowanceResultUnit.css';
 import styles from './AllowanceResultUnit.module.css';
 
 // Setup typings for props for the AllowanceResult container
