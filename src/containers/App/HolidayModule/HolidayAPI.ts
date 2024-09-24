@@ -36,14 +36,25 @@ export default class HolidayAPI {
      * Actual code that initialize the HolidayAPI class.
      */
     private static async initializeInternal() {
-        // Get the iCal
-        const ical = (await (await fetch(this.iCalURL)).text());
-        // Process iCal into ParsedICSEvent
-        this.holiday = ICSProcessor(ical);
-        // Initialize the holidayTimestamp array
-        this.holidayTimestamp = this.holiday.map((h) => {
-            return new Date(h.date).getTime();
-        });
+        try {
+            // Get the iCal
+            const ical = (await (await fetch(this.iCalURL)).text());
+            // Process iCal into ParsedICSEvent
+            this.holiday = ICSProcessor(ical);
+            // Initialize the holidayTimestamp array
+            this.holidayTimestamp = this.holiday.map((h) => {
+                return new Date(h.date).getTime();
+            });
+        }
+        catch (err) {
+            this.holiday = [];
+            this.holidayTimestamp = [];
+            window.alert(
+                'An error occurred while fetching the latest public holiday information, which will affect the accuracy of holiday-related calculations.\r\n' +
+                'Please refresh the page and try again.\r\n' +
+                'If the problem persists, please contact the developer.'
+            );
+        }
     }
 
     /**
