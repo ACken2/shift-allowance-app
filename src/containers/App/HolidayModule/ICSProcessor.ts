@@ -1,5 +1,6 @@
 // Import library
-import * as ical from 'ical';
+// Use the browser-safe entry (avoids Node fs from ical's main index)
+import ical from 'ical/ical.js';
 
 // Typing of cleaned event ready to be used by HolidayAPI
 export type ProcessedEvent = {
