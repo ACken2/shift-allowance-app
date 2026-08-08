@@ -1,6 +1,6 @@
 // Import library
 import React from 'react';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
 // Import CSS module stylesheet
 import styles from './Home.module.css';
@@ -29,10 +29,10 @@ const Home: React.FC<HomeProps> = ({ onGettingStarted }: HomeProps) => {
 				</div>
 			</header>
 			<footer className={styles.homeFooter}>
-                <div className="icon-footer">
+				<div className="icon-footer">
 					Icons made by <a href="https://www.flaticon.com/authors/itim2101" title="itim2101">itim2101</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-                </div>
-            </footer>
+				</div>
+			</footer>
 		</div>
 	);
 }
