@@ -1,5 +1,5 @@
 // Import library
-import moment from 'moment';
+import { format } from 'date-fns';
 import { titleCase } from "title-case";
 
 // Import HolidayModule for checking if a date is a public holiday
@@ -318,7 +318,7 @@ export class Allowance {
         // Reduce the events array (i.e. loop for each element in array and return a single number)
         return await events.reduce(async (coCounted: Promise<number>, event: CalendarEvent) => {
             // Format event.start as YYYY-MM-DD
-            let startDateStr = moment(event.start).format('YYYY-MM-DD');
+            let startDateStr = format(event.start, 'yyyy-MM-dd');
             // Check if the date is a Public Holiday and has not been counted (not within countedDate set) yet
             if ((await HolidayAPI.isHoliday(event.start)).isHoliday && !countedDate.has(startDateStr)) {
                 // Current event is situated on Public Holiday
