@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Hong_Kong
     steps:
       - name: Checkout
         uses: actions/checkout@v4

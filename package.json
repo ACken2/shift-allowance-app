@@ -31,7 +31,7 @@
 		"start": "vite",
 		"build": "tsc --noEmit && vite build",
 		"preview": "vite preview",
-		"test": "vitest run"
+		"test": "TZ=Asia/Hong_Kong vitest run"
 	},
 	"browserslist": {
 		"production": [
