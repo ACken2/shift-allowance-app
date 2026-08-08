@@ -1,22 +1,20 @@
 // Import library
 import React from 'react';
-import moment from 'moment';
-import { withStyles, lighten } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionActions';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { format } from 'date-fns';
+import { styled, lighten } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AllowanceResultUnitTextResult from './AllowanceResultUnitTextResult';
 
 // Import material-ui colors
-import red from '@material-ui/core/colors/red';
-import indigo from '@material-ui/core/colors/indigo';
-import green from '@material-ui/core/colors/green';
+import { red, indigo, green } from '@mui/material/colors';
 
 // Import typings for computation result from Allowance.ts
 import { AllowanceDetail } from 'containers/App/AllowanceModule/Allowance';
@@ -39,11 +37,11 @@ type AllowanceResultUnitProps = {
 // By design, each computed month would be rended as 1 single AllowanceResultUnit
 const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, allowanceBreakdown, earnedCO }: AllowanceResultUnitProps) => {
 	// Format our start Date object as YYYY MMMM (e.g. 2019 November) for output as title
-	const month = moment(allowance.start).format('YYYY MMMM');
+	const month = format(allowance.start, 'yyyy MMMM');
 	// Calculate the percentage to show in AllowanceProgress based on allowance.hours
 	const progress = Math.min(100, allowance.hours * 100 / 50);
 	// Compute color used by the progress bar
-	let color;
+	let color: string;
 	if (progress < 50) {
 		// In case if progress < 50%, no allowance can be obtained so we use red color
 		color = red[500];
@@ -57,34 +55,30 @@ const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, al
 		color = green[500];
 	}
 	// Customize LinearProgress with styles we want
-	const AllowanceProgress = withStyles({
-		root: {
-			height: '0.5em',
+	const AllowanceProgress = styled(LinearProgress)({
+		height: '0.5em',
+		borderRadius: '0.5em',
+		backgroundColor: lighten(color, 0.75),
+		[`& .${linearProgressClasses.bar}`]: {
 			borderRadius: '0.5em',
-			backgroundColor: lighten(color, 0.75)
+			backgroundColor: color,
 		},
-		bar: {
-			borderRadius: '0.5em',
-			backgroundColor: color
-		},
-	})(LinearProgress);
+	});
 	// Customize Accordion with colors
-	const AccordionColored = withStyles({
-		root: {
-			color: 'white',
-			backgroundColor: '#424242'
-		}
-	})(Accordion);
+	const AccordionColored = styled(Accordion)({
+		color: 'white',
+		backgroundColor: '#424242',
+	});
 	// Customize ListItemText with colors
-	const ListItemTextStyled = withStyles({
-		primary: {
-			fontSize: '0.8em'
+	const ListItemTextStyled = styled(ListItemText)({
+		'& .MuiListItemText-primary': {
+			fontSize: '0.8em',
 		},
-		secondary: {
+		'& .MuiListItemText-secondary': {
 			color: 'white',
-			fontSize: '0.7em'
-		}
-	})(ListItemText);
+			fontSize: '0.7em',
+		},
+	});
 	// Format the progress in terms of text
 	const progressText = Math.floor(allowance.hours * 100 / 50) + '% completed';
 	// Render our allowance compute result unit
@@ -120,12 +114,12 @@ const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, al
 				<AccordionDetails>
 					<List dense={true}>
 						{
-							allowanceBreakdown.map((allowance) => {
+							allowanceBreakdown.map((allowanceItem) => {
 								return (
-									<ListItem key={allowance.start.toString()}>
+									<ListItem key={allowanceItem.start.toString()}>
 										<ListItemTextStyled
-											primary={moment(allowance.start).format('MMM DD HH:mm') + ' - ' + moment(allowance.end).format('MMM DD HH:mm') + ' (' + allowance.desc + ')'}
-											secondary={Math.floor(allowance.hours * 100) / 100 + ' Hours'}
+											primary={format(allowanceItem.start, 'MMM dd HH:mm') + ' - ' + format(allowanceItem.end, 'MMM dd HH:mm') + ' (' + allowanceItem.desc + ')'}
+											secondary={Math.floor(allowanceItem.hours * 100) / 100 + ' Hours'}
 										/>
 									</ListItem>
 								)
