@@ -1,10 +1,8 @@
 // Import library
 import React from 'react';
-import Fab from '@material-ui/core/Fab';
-import { createTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from "@material-ui/styles";
-import AddIcon from '@material-ui/icons/Add';
-import SendIcon from '@material-ui/icons/Send';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import SendIcon from '@mui/icons-material/Send';
 import { ShiftDutyCalendar } from 'components/ShiftDutyCalendar';
 import { ModifyDutyDialog } from 'components/ModifyDutyDialog';
 import { NoDutyDialog } from 'components/NoDutyDialog';
@@ -21,205 +19,197 @@ type DutyConfig = typeof import("containers/App/DutyConfig_PY_PHER.json");
 
 // Setup typings for props and state for the CalendarSelect container
 type CalendarSelectProps = {
-    // Events (duty added) is the state of parent component
-    events: Array<CalendarEvent>;
-    // Duty config
-    dutyConfig: DutyConfig;
-    // Function called when event modification occured
-    onEventModification: Function;
-    // Function called when computation is initiated
-    onConfirm: Function;
+	// Events (duty added) is the state of parent component
+	events: Array<CalendarEvent>;
+	// Duty config
+	dutyConfig: DutyConfig;
+	// Function called when event modification occured
+	onEventModification: Function;
+	// Function called when computation is initiated
+	onConfirm: Function;
 }
 type CalendarSelectState = {
-    // State to control whether the modify dialog box is open or not
-    modifyDialog: boolean;
-    // State to set the initial date for the ModifyDutyDialog
-    modifyDialogInitialDate: Date;
-    // State to set the initial duty (as duty id) set for the selected date
-    modifyDialogInitialDuty: number;
-    // State to set the event id that is currently being modified or -1 when in event adding mode
-    modifyDialogEventId: number;
-    // State to control whether the duty not found dialog box is open or not
-    noDutyDialog: boolean;
+	// State to control whether the modify dialog box is open or not
+	modifyDialog: boolean;
+	// State to set the initial date for the ModifyDutyDialog
+	modifyDialogInitialDate: Date;
+	// State to set the initial duty (as duty id) set for the selected date
+	modifyDialogInitialDuty: number;
+	// State to set the event id that is currently being modified or -1 when in event adding mode
+	modifyDialogEventId: number;
+	// State to control whether the duty not found dialog box is open or not
+	noDutyDialog: boolean;
 }
 
 // Render our calendar page for tuning the shift duty date selection
 class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelectState> {
 
-    constructor(props: CalendarSelectProps) {
-        super(props);
-        this.state = {
-            modifyDialog: false,
-            modifyDialogInitialDate: new Date(),
-            modifyDialogInitialDuty: 0,
-            modifyDialogEventId: -1,
-            noDutyDialog: false
-        };
-    }
+	constructor(props: CalendarSelectProps) {
+		super(props);
+		this.state = {
+			modifyDialog: false,
+			modifyDialogInitialDate: new Date(),
+			modifyDialogInitialDuty: 0,
+			modifyDialogEventId: -1,
+			noDutyDialog: false
+		};
+	}
 
-    render() {
-        // Use dark theme
-        const defaultMaterialTheme = createTheme({
-            palette: {
-                type: 'dark'
-            }
-        });
-        return (
-            <ThemeProvider theme={defaultMaterialTheme}>
-                <div className={styles.calendarSelect}>
-                    <header className={styles.calendarSelectHeader}>
-                        <p className={styles.calendarSelectTitle}>
-                            Fine-tune your duty here
-                        </p>
-                        <ShiftDutyCalendar 
-                            style={styles.calendarSelectCalendar}
-                            events={this.props.events}
-                            onSelectSlot={(slot: SelectedSlotInfo) => this.handleSelectSlot(slot)}
-                            onSelectEvent={(event: CalendarEvent) => this.handleSelectEvent(event)}
-                        />
-                        <div className={styles.calendarSelectCalendarButtonSpacer} />
-                        <div className={styles.calendarSelectFAB}>
-                            <Fab color="primary" aria-label="add" className={styles.calendarSelectFABButton} onClick={() => this.handleAddEventButton()}>
-                                <AddIcon />
-                            </Fab>
-                            <Fab color="secondary" aria-label="compute" onClick={() => this.handleComputeAllowance()}>
-                                <SendIcon />
-                            </Fab>
-                        </div>
-                        <ModifyDutyDialog 
-                            key={this.state.modifyDialogInitialDate.getTime()}
-                            open={this.state.modifyDialog}
-                            initialDate={this.state.modifyDialogInitialDate}
-                            initialDuty={this.state.modifyDialogInitialDuty}
-                            dutyConfig={this.props.dutyConfig}
-                            onConfirmModification={
-                                (dateSelected: Date, duty_id: number, setForWholeWeek: boolean) => this.handleDutyModificationConfirm(dateSelected, duty_id, setForWholeWeek)
-                            }
-                            onCancelModification={() => this.handleDutyModificationCancel()}
-                        />
-                        <NoDutyDialog 
-                            open={this.state.noDutyDialog}
-                            onClose={() => { this.setState({ noDutyDialog: false }) }}
-                        />
-                    </header>
-                </div>
-            </ThemeProvider>
-        );
-    }
+	render() {
+		return (
+			<div className={styles.calendarSelect}>
+				<header className={styles.calendarSelectHeader}>
+					<p className={styles.calendarSelectTitle}>
+						Fine-tune your duty here
+					</p>
+					<ShiftDutyCalendar 
+						style={styles.calendarSelectCalendar}
+						events={this.props.events}
+						onSelectSlot={(slot: SelectedSlotInfo) => this.handleSelectSlot(slot)}
+						onSelectEvent={(event: CalendarEvent) => this.handleSelectEvent(event)}
+					/>
+					<div className={styles.calendarSelectCalendarButtonSpacer} />
+					<div className={styles.calendarSelectFAB}>
+						<Fab color="primary" aria-label="add" className={styles.calendarSelectFABButton} onClick={() => this.handleAddEventButton()}>
+							<AddIcon />
+						</Fab>
+						<Fab color="secondary" aria-label="compute" onClick={() => this.handleComputeAllowance()}>
+							<SendIcon />
+						</Fab>
+					</div>
+					<ModifyDutyDialog 
+						key={this.state.modifyDialogInitialDate.getTime()}
+						open={this.state.modifyDialog}
+						initialDate={this.state.modifyDialogInitialDate}
+						initialDuty={this.state.modifyDialogInitialDuty}
+						dutyConfig={this.props.dutyConfig}
+						onConfirmModification={
+							(dateSelected: Date, duty_id: number, setForWholeWeek: boolean) => this.handleDutyModificationConfirm(dateSelected, duty_id, setForWholeWeek)
+						}
+						onCancelModification={() => this.handleDutyModificationCancel()}
+					/>
+					<NoDutyDialog 
+						open={this.state.noDutyDialog}
+						onClose={() => { this.setState({ noDutyDialog: false }) }}
+					/>
+				</header>
+			</div>
+		);
+	}
 
-    /**
-     * Event handler for selecting a slot in the ShiftDutyCalendar.
-     * 
-     * @param {SelectedSlotInfo} slot Description on the selected slot.
-     * 
-     * @return {void} 
-     */
-    handleSelectSlot(slot: SelectedSlotInfo) {
-        if ((slot.action === "click" || slot.action === "select") && slot.start.getTime() === slot.end.getTime()) {
-            // Only handle click/select event if a single date is selected
-            // (i.e. slot selection event triggered with identical start time and end time)
-            // Update state to open dialog with,
-            //      1. The default date selected is set as the date selected
-            //      2. The default duty selected is set as None (id = 0)
-            //      3. The event id being modified is set as -1 (as event adding mode)
-            this.setState({
-                modifyDialog: true,
-                modifyDialogInitialDate: slot.start,
-                modifyDialogInitialDuty: 0,
-                modifyDialogEventId: -1
-            });
-        }
-    }
+	/**
+	 * Event handler for selecting a slot in the ShiftDutyCalendar.
+	 * 
+	 * @param {SelectedSlotInfo} slot Description on the selected slot.
+	 * 
+	 * @return {void} 
+	 */
+	handleSelectSlot(slot: SelectedSlotInfo) {
+		if ((slot.action === "click" || slot.action === "select") && slot.start.getTime() === slot.end.getTime()) {
+			// Only handle click/select event if a single date is selected
+			// (i.e. slot selection event triggered with identical start time and end time)
+			// Update state to open dialog with,
+			//      1. The default date selected is set as the date selected
+			//      2. The default duty selected is set as None (id = 0)
+			//      3. The event id being modified is set as -1 (as event adding mode)
+			this.setState({
+				modifyDialog: true,
+				modifyDialogInitialDate: slot.start,
+				modifyDialogInitialDuty: 0,
+				modifyDialogEventId: -1
+			});
+		}
+	}
 
-    /**
-     * Event handler for selecting an existing event in the ShiftDutyCalendar.
-     * 
-     * @param {CalendarEvent} event Description on the selected event.
-     * 
-     * @return {void} 
-     */
-    handleSelectEvent(event: CalendarEvent) {
-        // Open modify event dialog once an event is clicked
-        // Update state to open dialog with,
-        //      1. The default date selected is set as the date of the event selected
-        //      2. The default duty selected is set as selected event duty id
-        //      3. The event id being modified is set as the selected event id
-        this.setState({
-            modifyDialog: true,
-            modifyDialogInitialDate: event.start,
-            modifyDialogInitialDuty: event.duty.id,
-            modifyDialogEventId: event.id
-        });
-    }
+	/**
+	 * Event handler for selecting an existing event in the ShiftDutyCalendar.
+	 * 
+	 * @param {CalendarEvent} event Description on the selected event.
+	 * 
+	 * @return {void} 
+	 */
+	handleSelectEvent(event: CalendarEvent) {
+		// Open modify event dialog once an event is clicked
+		// Update state to open dialog with,
+		//      1. The default date selected is set as the date of the event selected
+		//      2. The default duty selected is set as selected event duty id
+		//      3. The event id being modified is set as the selected event id
+		this.setState({
+			modifyDialog: true,
+			modifyDialogInitialDate: event.start,
+			modifyDialogInitialDuty: event.duty.id,
+			modifyDialogEventId: event.id
+		});
+	}
 
-    /**
-     * Event handler for the add event floating button.
-     * 
-     * @return {void}
-     */
-    handleAddEventButton() {
-        // Update state to open dialog with,
-        //      1. The default date selected is set as the current date
-        //      2. The default duty selected is set as None (id = 0)
-        //      3. The event id being modified is set as -1 (as event adding mode)
-        this.setState({
-            modifyDialog: true,
-            modifyDialogInitialDate: new Date(),
-            modifyDialogInitialDuty: 0,
-            modifyDialogEventId: -1
-        });
-    }
+	/**
+	 * Event handler for the add event floating button.
+	 * 
+	 * @return {void}
+	 */
+	handleAddEventButton() {
+		// Update state to open dialog with,
+		//      1. The default date selected is set as the current date
+		//      2. The default duty selected is set as None (id = 0)
+		//      3. The event id being modified is set as -1 (as event adding mode)
+		this.setState({
+			modifyDialog: true,
+			modifyDialogInitialDate: new Date(),
+			modifyDialogInitialDuty: 0,
+			modifyDialogEventId: -1
+		});
+	}
 
-    /**
-     * Event handler for confirming a event modification in ModifyDutyDialog.
-     * 
-     * @param {Date} dateSelected Date selected in ModifyDutyDialog dialog box.
-     * @param {number} duty_id Duty ID selected in ModifyDutyDialog dialog box.
-     * @param {boolean} setForWholeWeek If true, the given duty_id will be set for all working days in the dateSelected.
-     * 
-     * @return {void} 
-     */
-    handleDutyModificationConfirm(dateSelected: Date, duty_id: number, setForWholeWeek: boolean) {
-        // Forward duty modification event to <App> parent component
-        this.props.onEventModification(dateSelected, duty_id, this.state.modifyDialogEventId, setForWholeWeek);
-        // Close the dialog box after modification is done
-        this.setState({
-            modifyDialog: false
-        });
-    }
+	/**
+	 * Event handler for confirming a event modification in ModifyDutyDialog.
+	 * 
+	 * @param {Date} dateSelected Date selected in ModifyDutyDialog dialog box.
+	 * @param {number} duty_id Duty ID selected in ModifyDutyDialog dialog box.
+	 * @param {boolean} setForWholeWeek If true, the given duty_id will be set for all working days in the dateSelected.
+	 * 
+	 * @return {void} 
+	 */
+	handleDutyModificationConfirm(dateSelected: Date, duty_id: number, setForWholeWeek: boolean) {
+		// Forward duty modification event to <App> parent component
+		this.props.onEventModification(dateSelected, duty_id, this.state.modifyDialogEventId, setForWholeWeek);
+		// Close the dialog box after modification is done
+		this.setState({
+			modifyDialog: false
+		});
+	}
 
-    /**
-     * Event handler for canceling a event modification in ModifyDutyDialog.
-     * 
-     * @return {void} 
-     */
-    handleDutyModificationCancel() {
-        // Simply close the dialog box if modification is cancel
-        this.setState({
-            modifyDialog: false
-        });
-    }
+	/**
+	 * Event handler for canceling a event modification in ModifyDutyDialog.
+	 * 
+	 * @return {void} 
+	 */
+	handleDutyModificationCancel() {
+		// Simply close the dialog box if modification is cancel
+		this.setState({
+			modifyDialog: false
+		});
+	}
 
-    /**
-     * Event handler for clicking compute allowance button.
-     * 
-     * @return {void} 
-     */
-    handleComputeAllowance() {
-        // Check if there is any existing events first before computing the allowance
-        if (this.props.events.length > 0) {
-            // Events exists and ready for allowance compute
-            // Call parent component method for computing allowance
-            this.props.onConfirm();
-        }
-        else {
-            // No event exists and allowance should not be computed
-            // Instead, we should show a dialog that informed the user that no duty exists
-            this.setState({
-                noDutyDialog: true
-            });
-        }
-    }
+	/**
+	 * Event handler for clicking compute allowance button.
+	 * 
+	 * @return {void} 
+	 */
+	handleComputeAllowance() {
+		// Check if there is any existing events first before computing the allowance
+		if (this.props.events.length > 0) {
+			// Events exists and ready for allowance compute
+			// Call parent component method for computing allowance
+			this.props.onConfirm();
+		}
+		else {
+			// No event exists and allowance should not be computed
+			// Instead, we should show a dialog that informed the user that no duty exists
+			this.setState({
+				noDutyDialog: true
+			});
+		}
+	}
 
 } 
 
