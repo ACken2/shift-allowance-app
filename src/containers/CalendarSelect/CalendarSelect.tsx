@@ -68,7 +68,6 @@ class CalendarSelect extends React.Component<CalendarSelectProps, CalendarSelect
 						onSelectSlot={(slot: SelectedSlotInfo) => this.handleSelectSlot(slot)}
 						onSelectEvent={(event: CalendarEvent) => this.handleSelectEvent(event)}
 					/>
-					<div className={styles.calendarSelectCalendarButtonSpacer} />
 					<div className={styles.calendarSelectFAB}>
 						<Fab color="primary" aria-label="add" className={styles.calendarSelectFABButton} onClick={() => this.handleAddEventButton()}>
 							<AddIcon />
