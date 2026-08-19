@@ -1,44 +1,50 @@
 .home {
-	height: 95%;
-	text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 1rem 1.25rem 0;
 }
 
 .homeLogo {
-	height: 35vmin;
-	max-height: 230px;
+    height: 32vmin;
+    max-height: 200px;
+    margin-bottom: 1.5rem;
 }
 
 .homeHeader {
-	background-color: #282c34;
-	min-height: 90%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	font-size: 1.2em;
-	color: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--app-text);
 }
 
 .homeBody {
-	max-width: 100%;
+    width: 100%;
+    max-width: 100%;
 }
 
 .homeBodyTitle {
-	width: 100%;
-	font-size: 1.2em;
+    width: 100%;
+    margin: 0 0 1.25rem;
+    font-size: 1.35rem;
+    font-weight: 500;
+    line-height: 1.35;
 }
 
 .homeBodyButton {
-	width: 100%;
-    font-size: 0.8em !important;
-    padding: 10px !important;
+    width: 100%;
 }
 
 .homeFooter {
-	height: 5%;
-	min-height: 32px;
-	background-color: #282c34;
-	margin: 0;
-	display: flex;
+    flex-shrink: 0;
+    display: flex;
     justify-content: center;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
