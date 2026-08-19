@@ -2,10 +2,10 @@
 
 /* Override the background color, padding and margin of the toolbar */
 .rbc-toolbar {
-    background-color: #303030;
-    padding-bottom: 2vh;
-    padding-top: 2vh;
-    margin: 0px;
+    background-color: var(--app-surface-elevated);
+    padding: 0.75rem 0.5rem;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 /* Override the default text color of button to be white */
@@ -37,7 +37,6 @@
 }
 
 /* Override the font size of button and the text that said the current month */
-/* Using vmin to provide better screen size variation support */
 .rbc-btn-group button, .rbc-toolbar-label {
-    font-size: 1em;
+    font-size: 0.95rem;
 }
