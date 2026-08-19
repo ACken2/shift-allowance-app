@@ -6,9 +6,7 @@ import {
 	useNavigate,
 	NavigateFunction,
 } from 'react-router-dom';
-import screenfull from 'screenfull';
 import { startOfWeek, endOfWeek, addDays, isSameDay } from 'date-fns';
-import { isMobileOnly } from 'react-device-detect';
 import { Allowance, ComputeResult } from './AllowanceModule/Allowance';
 
 // Import CalendarEvent typing
@@ -30,6 +28,7 @@ import { NavBar } from 'containers/NavBar';
 import { DateSelect } from 'containers/DateSelect';
 import { CalendarSelect } from 'containers/CalendarSelect';
 import { AllowanceResult } from 'containers/AllowanceResult';
+import { AppShell } from 'containers/AppShell';
 
 // Setup typings for props and state for our App
 type AppProps = {
@@ -49,8 +48,6 @@ type AppState = {
 // Setup our App
 class App extends React.Component<AppProps, AppState> {
 
-	private rootDivRef: React.RefObject<HTMLDivElement>;
-
 	constructor(props: AppProps) {
 		super(props);
 		HolidayAPI.initialize(); // Initialize HolidayAPI
@@ -64,86 +61,98 @@ class App extends React.Component<AppProps, AppState> {
 			redirectCalendarSelect: false,
 			dutyConfigMode: Constant.DUTY_PY_PHER
 		};
-		this.rootDivRef = React.createRef(); // Creating a ref for the root div
 	}
 
-	componentDidMount() {
-		if (this.rootDivRef.current) {
-			// Setting the rootDiv to have the entire availHeight
-			// This is used to fix the vh inconsistency in some mobile browser upon
-			// initial render which causes the Home page to be not centered properly
-			this.rootDivRef.current.style.height = `${window.screen.availHeight}px`;
-		}
+	/**
+	 * Build a shared shell with the given navigation props and page content.
+	 *
+	 * @param navProps Navigation bar route and duty-config props.
+	 * @param children Page content for the main region.
+	 * @return Shell element wrapping nav and page.
+	 */
+	renderShell(
+		navProps: {
+			backRoute: string | undefined;
+			nextRoute: string | undefined;
+			disableDutyConfigChange: boolean;
+		},
+		children: React.ReactNode
+	) {
+		return (
+			<AppShell
+				navBar={
+					<NavBar
+						backRoute={navProps.backRoute}
+						nextRoute={navProps.nextRoute}
+						disableDutyConfigChange={navProps.disableDutyConfigChange}
+						dutyConfigModeSelected={this.state.dutyConfigMode}
+						onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
+					/>
+				}
+			>
+				{children}
+			</AppShell>
+		);
 	}
 	
 	render() {
 		return(
-			<div ref={this.rootDivRef}>
-				<Routes>
-					<Route path="/date-select" element={
-						<>
-							<NavBar 
-								backRoute={"/"}
-								nextRoute={this.state.events.length > 0 ? "/calendar-select" : undefined }
-								disableDutyConfigChange={false}
-								dutyConfigModeSelected={this.state.dutyConfigMode}
-								onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
-							/>
-							<DateSelect 
-								onDateConfirmed={(startDate: Date, dutyLoopId: number = 0) => this.handleDateConfirmation(startDate, dutyLoopId)}
-							/>
-						</>
-					} />
-					<Route path="/calendar-select" element={
-						<>
-							<NavBar 
-								backRoute={"/date-select"}
-								nextRoute={undefined}
-								disableDutyConfigChange={true}
-								dutyConfigModeSelected={this.state.dutyConfigMode}
-								onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
-							/>
-							<CalendarSelect 
-								events={this.state.events}
-								dutyConfig={this.getDutyConfigSelected()}
-								onEventModification={
-									(dateSelected: Date, duty_id: number, event_modified: number, setForWholeWeek: boolean = false) => 
-										this.handleEventModification(dateSelected, duty_id, event_modified, setForWholeWeek)
-								}
-								onConfirm={() => this.handleComputeAllowance()}
-							/>
-						</>
-					} />
-					<Route path="/allowance-result" element={
-						<>
-							<NavBar 
-								backRoute={"/calendar-select"}
-								nextRoute={undefined}
-								disableDutyConfigChange={true}
-								dutyConfigModeSelected={this.state.dutyConfigMode}
-								onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
-							/>
-							<AllowanceResult 
-								allowance={this.state.lastAllowanceComputed.month}
-								allowanceBreakdown={this.state.lastAllowanceComputed.day}
-								earnedCOByMonth={this.state.lastAllowanceComputed.earnedCO}
-							/>
-						</>
-					} />
-					<Route path="/" element={
-						<>
-							<NavBar 
-								backRoute={undefined}
-								nextRoute={undefined}
-								disableDutyConfigChange={false}
-								dutyConfigModeSelected={this.state.dutyConfigMode}
-								onDutyConfigModeChange={(dutyMode: number) => this.handleDutyConfigModeChange(dutyMode)}
-							/>
-							<Home onGettingStarted={() => this.handleGettingStarted()} />
-						</>
-					} />
-				</Routes>
-			</div>
+			<Routes>
+				<Route path="/date-select" element={
+					this.renderShell(
+						{
+							backRoute: "/",
+							nextRoute: this.state.events.length > 0 ? "/calendar-select" : undefined,
+							disableDutyConfigChange: false,
+						},
+						<DateSelect
+							onDateConfirmed={(startDate: Date, dutyLoopId: number = 0) => this.handleDateConfirmation(startDate, dutyLoopId)}
+						/>
+					)
+				} />
+				<Route path="/calendar-select" element={
+					this.renderShell(
+						{
+							backRoute: "/date-select",
+							nextRoute: undefined,
+							disableDutyConfigChange: true,
+						},
+						<CalendarSelect
+							events={this.state.events}
+							dutyConfig={this.getDutyConfigSelected()}
+							onEventModification={
+								(dateSelected: Date, duty_id: number, event_modified: number, setForWholeWeek: boolean = false) =>
+									this.handleEventModification(dateSelected, duty_id, event_modified, setForWholeWeek)
+							}
+							onConfirm={() => this.handleComputeAllowance()}
+						/>
+					)
+				} />
+				<Route path="/allowance-result" element={
+					this.renderShell(
+						{
+							backRoute: "/calendar-select",
+							nextRoute: undefined,
+							disableDutyConfigChange: true,
+						},
+						<AllowanceResult
+							allowance={this.state.lastAllowanceComputed.month}
+							allowanceBreakdown={this.state.lastAllowanceComputed.day}
+							earnedCOByMonth={this.state.lastAllowanceComputed.earnedCO}
+						/>
+					)
+				} />
+				<Route path="/" element={
+					this.renderShell(
+						{
+							backRoute: undefined,
+							nextRoute: undefined,
+							disableDutyConfigChange: false,
+						},
+						<Home onGettingStarted={() => this.handleGettingStarted()} />
+					)
+				} />
+			</Routes>
 		)
 	}
 
@@ -314,23 +323,13 @@ class App extends React.Component<AppProps, AppState> {
 
 	/**
 	 * Handle the 'Getting Started' button on Home page.
-	 * 
-	 * This function will redirect the app to the DateSelect page, and set the
-	 * application into fullpage mode if,
-	 *      1. The browser is recognized as a mobile browser (excluding tablet),
-	 *      2. 65vh < 400px which indicate the CalendarSelect page could be bugged and does not display correctly,
-	 * to allow the app to function correctly in a larger range of devices.
-	 * 
+	 *
+	 * Redirects the app to the DateSelect page.
+	 *
 	 * @return {void}
 	 */
 	handleGettingStarted() {
-		// Push the app to DateSelect page
 		this.props.navigate("/date-select");
-		// Set the app into fullscreen mode if necessary
-		if (isMobileOnly && window.innerHeight * 0.65 < 400 && screenfull.isEnabled) {
-			// Request full screen from root <HTML> element using Screenfull library
-			screenfull.request();
-		}
 	}
 
 	/**

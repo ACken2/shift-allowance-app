@@ -35,6 +35,7 @@ const DateSelect: React.FC<DateSelectProps> = ({ onDateConfirmed }: DateSelectPr
 								textField: {
 									margin: 'normal',
 									id: 'date-picker-dialog',
+									fullWidth: true,
 								},
 							}}
 						/>

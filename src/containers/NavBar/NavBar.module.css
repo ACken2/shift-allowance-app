@@ -1,49 +1,39 @@
 .navBar {
-    height: 5%;
-    min-height: 32px;
-    width: 100vw;
-    background-color: #282c34;
+    height: 48px;
+    width: 100%;
+    background-color: var(--app-bg);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-content: center;
-    position: absolute;
-    left: 0;
+    align-items: center;
+    box-sizing: border-box;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 .navBarMode {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: min(1rem, 3vmin);
-    color: white;
-    margin-top: 8px;
-    margin-left: 8px;
+    font-size: 0.95rem;
+    color: var(--app-text);
 }
 
 .navBarSelectText {
-    color: white !important;
+    color: var(--app-text) !important;
     text-align: center;
 }
 
 .navBarButton {
-    color: white !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    padding-left: 3vmin !important;
-    padding-right: 3vmin !important;
-    margin-top: 1vh !important;
+    color: var(--app-text) !important;
+    padding: 8px 12px !important;
 }
 
 .navBarButtonDisabled {
-    color: #282c34 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    padding-left: 3vmin !important;
-    padding-right: 3vmin !important;
-    margin-top: 1vh !important;
+    color: var(--app-bg) !important;
+    padding: 8px 12px !important;
 }
 
 .navBarButtonIcon {
-    font-size: 1em !important;
+    font-size: 1.1rem !important;
 }

@@ -2,7 +2,9 @@
 
 /* Override the background color of the month view */
 .rbc-month-view {
-    background-color: #424242;
+    background-color: var(--app-surface);
+    flex: 1;
+    min-height: 0;
 }
 
 /* Override the background color of today in month view */
@@ -13,5 +15,15 @@
 /* Override the font-size for event title */
 .rbc-event-content {
     font-size: 0.8em;
-    max-width: 10vw;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rbc-month-row {
+    overflow: hidden;
+}
+
+.rbc-row-content {
+    min-height: 0;
 }
