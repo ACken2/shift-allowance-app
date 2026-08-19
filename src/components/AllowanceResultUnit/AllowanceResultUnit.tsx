@@ -66,8 +66,8 @@ const AllowanceResultUnit: React.FC<AllowanceResultUnitProps> = ({ allowance, al
 	});
 	// Customize Accordion with colors
 	const AccordionColored = styled(Accordion)({
-		color: 'white',
-		backgroundColor: '#424242',
+		color: 'var(--app-text)',
+		backgroundColor: 'var(--app-surface)',
 	});
 	// Customize ListItemText with colors
 	const ListItemTextStyled = styled(ListItemText)({
